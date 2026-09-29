@@ -420,11 +420,15 @@ export function createInstance(
 // Tree helpers
 // ---------------------------------------------------------------------------------------------
 
-export function isContainer(node: SceneNode | ComponentNode): node is ContainerNode {
+/** Any node a document can hold at its top level: scene nodes on pages, variants in component
+ *  files. Only roots can be components; everything below them is a SceneNode. */
+export type AnyNode = SceneNode | ComponentNode;
+
+export function isContainer(node: AnyNode): node is ContainerNode {
     return node.type === 'frame' || node.type === 'group';
 }
 
-export function childrenOf(node: SceneNode | ComponentNode): SceneNode[] | undefined {
+export function childrenOf(node: AnyNode): SceneNode[] | undefined {
     return node.type === 'frame' || node.type === 'group' || node.type === 'component'
         ? node.children
         : undefined;
@@ -432,9 +436,9 @@ export function childrenOf(node: SceneNode | ComponentNode): SceneNode[] | undef
 
 /** Depth-first walk. Return `false` from the visitor to skip a node's children. */
 export function walk(
-    nodes: SceneNode[],
-    visit: (node: SceneNode, parent: SceneNode | null, depth: number) => void | false,
-    parent: SceneNode | null = null,
+    nodes: AnyNode[],
+    visit: (node: AnyNode, parent: AnyNode | null, depth: number) => void | false,
+    parent: AnyNode | null = null,
     depth = 0,
 ): void {
     for (const node of nodes) {
@@ -444,8 +448,8 @@ export function walk(
     }
 }
 
-export function findNode(nodes: SceneNode[], id: string): SceneNode | undefined {
-    let found: SceneNode | undefined;
+export function findNode(nodes: AnyNode[], id: string): AnyNode | undefined {
+    let found: AnyNode | undefined;
     walk(nodes, (n) => {
         if (found) return false;
         if (n.id === id) found = n;
@@ -454,9 +458,9 @@ export function findNode(nodes: SceneNode[], id: string): SceneNode | undefined 
 }
 
 /** The chain of ancestors from the top level down to (excluding) the node. */
-export function ancestorsOf(nodes: SceneNode[], id: string): SceneNode[] {
-    const path: SceneNode[] = [];
-    const search = (list: SceneNode[]): boolean => {
+export function ancestorsOf(nodes: AnyNode[], id: string): AnyNode[] {
+    const path: AnyNode[] = [];
+    const search = (list: AnyNode[]): boolean => {
         for (const n of list) {
             if (n.id === id) return true;
             const kids = childrenOf(n);
@@ -473,12 +477,12 @@ export function ancestorsOf(nodes: SceneNode[], id: string): SceneNode[] {
 
 /** The list that directly contains the node, and its index there. */
 export function locate(
-    nodes: SceneNode[],
+    nodes: AnyNode[],
     id: string,
-): { list: SceneNode[]; index: number; parent: SceneNode | null } | undefined {
+): { list: AnyNode[]; index: number; parent: AnyNode | null } | undefined {
     const search = (
-        list: SceneNode[],
-        parent: SceneNode | null,
+        list: AnyNode[],
+        parent: AnyNode | null,
     ): ReturnType<typeof locate> | undefined => {
         for (let i = 0; i < list.length; i++) {
             const n = list[i]!;
@@ -494,7 +498,7 @@ export function locate(
     return search(nodes, null);
 }
 
-export function collectIds(nodes: SceneNode[], into = new Set<string>()): Set<string> {
+export function collectIds(nodes: AnyNode[], into = new Set<string>()): Set<string> {
     walk(nodes, (n) => {
         into.add(n.id);
     });
