@@ -23,6 +23,9 @@
         },
         "typecheck": {
             "outputs": []
+        },
+        "build:schema": {
+            "cache": false
         }
     }
 }
