@@ -1,0 +1,79 @@
+name: 🐛 Bug report
+description: Report something that is broken or not working as expected
+title: "area: <short summary>"
+labels: ["type:bug", "status:triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. A precise repro is the fastest path to a fix.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is wrong, in one or two sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Include error messages, logs, or screenshots.
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Production
+        - Dev
+        - Local
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - format (packages/ovd-core)
+        - canvas
+        - panels (layers / properties)
+        - components
+        - layout
+        - tokens
+        - io (open / save / import / export)
+        - git
+        - viewer
+        - ui (packages/ui)
+        - infra / build / tooling
+        - docs
+    validations:
+      required: false
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - P0 - prod down / data loss
+        - P1 - major, no workaround
+        - P2 - minor / workaround exists
+        - P3 - trivial
+    validations:
+      required: true

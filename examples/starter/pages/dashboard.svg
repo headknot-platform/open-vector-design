@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ovd="https://ovd.dev/ns/0.1" ovd:type="page" ovd:name="Dashboard" ovd:version="0.1" viewBox="-100 -100 1480 1000">
+  <style ovd:generated="tokens">
+:root {
+  --color-accent: #ec4899;
+  --color-background: #f8f9fb;
+  --color-border: #dde1e8;
+  --color-primary: #4f46e5;
+  --color-success: #16a34a;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef0f4;
+  --color-text: #111319;
+  --color-text-muted: #6b7280;
+  --typography-heading-md: 600 20px/1.3 Inter, sans-serif;
+  --typography-heading-xl: 700 32px/1.2 Inter, sans-serif;
+}
+</style>
+  <g id="f_dashboard" ovd:type="frame" ovd:name="Dashboard / Desktop" ovd:clip="true" ovd:height="800" ovd:width="1280" clip-path="url(#f_dashboard__clip)" transform="translate(0 0)">
+    <clipPath id="f_dashboard__clip">
+      <rect height="800" width="1280"/>
+    </clipPath>
+    <rect ovd:fill="{color.background}" fill="var(--color-background, #f8f9fb)" height="800" width="1280"/>
+    <g id="g_sidebar" ovd:type="group" ovd:name="Sidebar" ovd:height="800" ovd:width="240" transform="translate(0 0)">
+      <rect id="r_sidebar" ovd:name="Sidebar bg" ovd:fill="{color.surface}" ovd:stroke="{color.border}" fill="var(--color-surface, #ffffff)" height="800" stroke="var(--color-border, #dde1e8)" stroke-width="1" width="240" x="0" y="0"/>
+      <rect id="r_logo" ovd:name="Logo" ovd:fill="{color.primary}" fill="var(--color-primary, #4f46e5)" height="32" rx="8" width="32" x="24" y="24"/>
+      <text id="t_brand" ovd:type="text" ovd:name="Brand" ovd:box="auto-width" ovd:content="Acme" ovd:fill="{color.text}" ovd:height="26" ovd:line-height="1.3" ovd:text-style="{typography.heading.md}" ovd:width="60" fill="var(--color-text, #111319)" font-family="Inter, sans-serif" font-size="20" font-weight="600" transform="translate(68 27)">
+        <tspan x="0" y="19">Acme</tspan>
+      </text>
+      <rect id="r_nav_active" ovd:name="Active item" ovd:fill="{color.surface-muted}" fill="var(--color-surface-muted, #eef0f4)" height="36" rx="6" width="216" x="12" y="88"/>
+      <text id="t_nav_1" ovd:type="text" ovd:name="Nav / Overview" ovd:box="auto-width" ovd:content="Overview" ovd:fill="{color.text}" ovd:height="21" ovd:line-height="1.4" ovd:width="70" fill="var(--color-text, #111319)" font-family="Inter, sans-serif" font-size="15" font-weight="600" transform="translate(28 96)">
+        <tspan x="0" y="15">Overview</tspan>
+      </text>
+      <text id="t_nav_2" ovd:type="text" ovd:name="Nav / Projects" ovd:box="auto-width" ovd:content="Projects" ovd:fill="{color.text-muted}" ovd:height="21" ovd:line-height="1.4" ovd:width="66" fill="var(--color-text-muted, #6b7280)" font-family="Inter, sans-serif" font-size="15" font-weight="400" transform="translate(28 140)">
+        <tspan x="0" y="15">Projects</tspan>
+      </text>
+      <text id="t_nav_3" ovd:type="text" ovd:name="Nav / Settings" ovd:box="auto-width" ovd:content="Settings" ovd:fill="{color.text-muted}" ovd:height="21" ovd:line-height="1.4" ovd:width="62" fill="var(--color-text-muted, #6b7280)" font-family="Inter, sans-serif" font-size="15" font-weight="400" transform="translate(28 184)">
+        <tspan x="0" y="15">Settings</tspan>
+      </text>
+    </g>
+    <text id="t_title" ovd:type="text" ovd:name="Title" ovd:box="auto-width" ovd:content="Overview" ovd:fill="{color.text}" ovd:height="38.4" ovd:line-height="1.2" ovd:text-style="{typography.heading.xl}" ovd:width="140" fill="var(--color-text, #111319)" font-family="Inter, sans-serif" font-size="32" font-weight="700" transform="translate(280 32)">
+      <tspan x="0" y="28.8">Overview</tspan>
+    </text>
+    <ellipse id="e_avatar" ovd:name="Avatar" ovd:fill="{color.accent}" cx="1220" cy="52" fill="var(--color-accent, #ec4899)" rx="20" ry="20"/>
+    <use id="i_new" ovd:type="instance" ovd:name="New project" ovd:variant="variant=primary,size=sm" height="36" href="../components/button.svg#c_button" width="120" x="1064" y="34">
+      <ovd:override target="label" text="New project"/>
+    </use>
+    <g id="g_card_1" ovd:type="group" ovd:name="Card / Revenue" ovd:height="132" ovd:width="300" transform="translate(280 104)">
+      <rect id="r_card_1" ovd:name="Card" ovd:fill="{color.surface}" ovd:shadow="0 4 16 0 #0f172a1f" fill="var(--color-surface, #ffffff)" filter="drop-shadow(0px 4px 8px #0f172a1f)" height="132" rx="16" width="300" x="0" y="0"/>
+      <text id="t_card_1_label" ovd:type="text" ovd:name="Label" ovd:box="auto-width" ovd:content="Revenue" ovd:fill="{color.text-muted}" ovd:height="21" ovd:line-height="1.4" ovd:width="60" fill="var(--color-text-muted, #6b7280)" font-family="Inter, sans-serif" font-size="14" font-weight="500" transform="translate(24 24)">
+        <tspan x="0" y="14">Revenue</tspan>
+      </text>
+      <text id="t_card_1_value" ovd:type="text" ovd:name="Value" ovd:box="auto-width" ovd:content="$48,210" ovd:fill="{color.text}" ovd:height="38.4" ovd:line-height="1.2" ovd:width="130" fill="var(--color-text, #111319)" font-family="Inter, sans-serif" font-size="32" font-weight="700" transform="translate(24 60)">
+        <tspan x="0" y="28.8">$48,210</tspan>
+      </text>
+    </g>
+    <g id="g_card_2" ovd:type="group" ovd:name="Card / Users" ovd:height="132" ovd:width="300" transform="translate(604 104)">
+      <rect id="r_card_2" ovd:name="Card" ovd:fill="{color.surface}" ovd:shadow="0 4 16 0 #0f172a1f" fill="var(--color-surface, #ffffff)" filter="drop-shadow(0px 4px 8px #0f172a1f)" height="132" rx="16" width="300" x="0" y="0"/>
+      <text id="t_card_2_label" ovd:type="text" ovd:name="Label" ovd:box="auto-width" ovd:content="Active users" ovd:fill="{color.text-muted}" ovd:height="21" ovd:line-height="1.4" ovd:width="84" fill="var(--color-text-muted, #6b7280)" font-family="Inter, sans-serif" font-size="14" font-weight="500" transform="translate(24 24)">
+        <tspan x="0" y="14">Active users</tspan>
+      </text>
+      <text id="t_card_2_value" ovd:type="text" ovd:name="Value" ovd:box="auto-width" ovd:content="2,431" ovd:fill="{color.text}" ovd:height="38.4" ovd:line-height="1.2" ovd:width="90" fill="var(--color-text, #111319)" font-family="Inter, sans-serif" font-size="32" font-weight="700" transform="translate(24 60)">
+        <tspan x="0" y="28.8">2,431</tspan>
+      </text>
+    </g>
+    <g id="g_card_3" ovd:type="group" ovd:name="Card / Conversion" ovd:height="132" ovd:width="300" transform="translate(928 104)">
+      <rect id="r_card_3" ovd:name="Card" ovd:fill="{color.surface}" ovd:shadow="0 4 16 0 #0f172a1f" fill="var(--color-surface, #ffffff)" filter="drop-shadow(0px 4px 8px #0f172a1f)" height="132" rx="16" width="300" x="0" y="0"/>
+      <text id="t_card_3_label" ovd:type="text" ovd:name="Label" ovd:box="auto-width" ovd:content="Conversion" ovd:fill="{color.text-muted}" ovd:height="21" ovd:line-height="1.4" ovd:width="76" fill="var(--color-text-muted, #6b7280)" font-family="Inter, sans-serif" font-size="14" font-weight="500" transform="translate(24 24)">
+        <tspan x="0" y="14">Conversion</tspan>
+      </text>
+      <text id="t_card_3_value" ovd:type="text" ovd:name="Value" ovd:box="auto-width" ovd:content="3.8%" ovd:fill="{color.success}" ovd:height="38.4" ovd:line-height="1.2" ovd:width="80" fill="var(--color-success, #16a34a)" font-family="Inter, sans-serif" font-size="32" font-weight="700" transform="translate(24 60)">
+        <tspan x="0" y="28.8">3.8%</tspan>
+      </text>
+    </g>
+    <g id="g_chart" ovd:type="group" ovd:name="Chart" ovd:height="500" ovd:width="948" transform="translate(280 260)">
+      <rect id="r_chart" ovd:name="Chart card" ovd:fill="{color.surface}" ovd:shadow="0 4 16 0 #0f172a1f" fill="var(--color-surface, #ffffff)" filter="drop-shadow(0px 4px 8px #0f172a1f)" height="500" rx="16" width="948" x="0" y="0"/>
+      <text id="t_chart_title" ovd:type="text" ovd:name="Chart title" ovd:box="auto-width" ovd:content="Weekly revenue" ovd:fill="{color.text}" ovd:height="26" ovd:line-height="1.3" ovd:text-style="{typography.heading.md}" ovd:width="150" fill="var(--color-text, #111319)" font-family="Inter, sans-serif" font-size="20" font-weight="600" transform="translate(24 24)">
+        <tspan x="0" y="19">Weekly revenue</tspan>
+      </text>
+      <line id="l_axis" ovd:name="Axis" ovd:stroke="{color.border}" stroke="var(--color-border, #dde1e8)" stroke-width="1" x1="24" x2="924" y1="440" y2="440"/>
+      <path id="p_series" ovd:name="Series" ovd:height="300" ovd:stroke="{color.primary}" ovd:width="900" d="M0 260C80 240 120 180 180 190C240 200 280 120 360 110C440 100 480 160 540 140C600 120 660 40 720 30C780 20 840 60 900 0" fill="none" stroke="var(--color-primary, #4f46e5)" stroke-width="3" transform="translate(24 100)"/>
+    </g>
+  </g>
+</svg>

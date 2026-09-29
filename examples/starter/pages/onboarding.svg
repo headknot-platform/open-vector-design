@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ovd="https://ovd.dev/ns/0.1" ovd:type="page" ovd:name="Onboarding" ovd:version="0.1" viewBox="-100 -100 1080 1044">
+  <style ovd:generated="tokens">
+:root {
+  --color-accent: #ec4899;
+  --color-primary: #4f46e5;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef0f4;
+  --color-text: #111319;
+  --color-text-muted: #6b7280;
+  --motion-fast: 150ms;
+  --spacing-lg: 24px;
+  --spacing-md: 16px;
+  --typography-body-md: 400 16px/1.5 Inter, sans-serif;
+  --typography-heading-xl: 700 32px/1.2 Inter, sans-serif;
+}
+</style>
+  <g id="f_welcome" ovd:type="frame" ovd:name="Welcome / Mobile" ovd:clip="true" ovd:height="844" ovd:width="390" clip-path="url(#f_welcome__clip)" transform="translate(0 0)">
+    <title>Welcome screen</title>
+    <clipPath id="f_welcome__clip">
+      <rect height="844" width="390"/>
+    </clipPath>
+    <rect ovd:fill="{color.surface}" fill="var(--color-surface, #ffffff)" height="844" width="390"/>
+    <rect id="r_hero" ovd:name="Hero" ovd:constraints="left-right top" ovd:fill="{color.surface-muted}" fill="var(--color-surface-muted, #eef0f4)" height="260" rx="16" width="342" x="24" y="96"/>
+    <ellipse id="e_orb_1" ovd:name="Orb" ovd:fill="{color.primary}" cx="150" cy="210" fill="var(--color-primary, #4f46e5)" opacity="0.9" rx="70" ry="70"/>
+    <ellipse id="e_orb_2" ovd:name="Orb small" ovd:fill="{color.accent}" cx="250" cy="250" fill="var(--color-accent, #ec4899)" opacity="0.85" rx="46" ry="46"/>
+    <path id="p_spark" ovd:name="Spark" ovd:fill="{color.surface}" ovd:height="40" ovd:width="40" d="M20 0L25 15L40 20L25 25L20 40L15 25L0 20L15 15Z" fill="var(--color-surface, #ffffff)" transform="translate(236 140)"/>
+    <text id="t_heading" ovd:type="text" ovd:name="Heading" ovd:box="fixed-width" ovd:content="Welcome to OVD" ovd:fill="{color.text}" ovd:height="38.4" ovd:line-height="1.2" ovd:text-style="{typography.heading.xl}" ovd:width="342" fill="var(--color-text, #111319)" font-family="Inter, sans-serif" font-size="32" font-weight="700" transform="translate(24 392)">
+      <tspan x="0" y="28.8">Welcome to OVD</tspan>
+    </text>
+    <text id="t_body" ovd:type="text" ovd:name="Body" ovd:box="fixed-width" ovd:content="Design once, open it anywhere. OVD files are plain SVG, so every browser can show them and Git can version them." ovd:fill="{color.text-muted}" ovd:height="96" ovd:line-height="1.5" ovd:text-style="{typography.body.md}" ovd:width="342" fill="var(--color-text-muted, #6b7280)" font-family="Inter, sans-serif" font-size="16" font-weight="400" transform="translate(24 446)">
+      <tspan x="0" y="16.8">Design once, open it anywhere. OVD files</tspan>
+      <tspan x="0" y="40.8">are plain SVG, so every browser can show</tspan>
+      <tspan x="0" y="64.8">them and Git can version them.</tspan>
+    </text>
+    <a ovd:duration="{motion.fast}" ovd:transition="slide-left" ovd:trigger="click" href="#f_signin">
+      <use id="i_cta" ovd:type="instance" ovd:name="Get started" ovd:constraints="left-right bottom" ovd:variant="variant=primary,size=md" height="44" href="../components/button.svg#c_button" width="342" x="24" y="712">
+        <ovd:override target="label" text="Get started"/>
+      </use>
+    </a>
+    <use id="i_secondary" ovd:type="instance" ovd:name="Sign in" ovd:constraints="left-right bottom" ovd:variant="variant=secondary,size=md" height="44" href="../components/button.svg#c_button" width="342" x="24" y="768">
+      <ovd:override target="label" text="I already have an account"/>
+    </use>
+  </g>
+  <g id="f_signin" ovd:type="frame" ovd:name="Sign in / Mobile" ovd:align="stretch" ovd:clip="true" ovd:direction="column" ovd:gap="{spacing.md}" ovd:height="844" ovd:justify="start" ovd:layout="flex" ovd:padding="{spacing.lg}" ovd:width="390" clip-path="url(#f_signin__clip)" transform="translate(490 0)">
+    <clipPath id="f_signin__clip">
+      <rect height="844" width="390"/>
+    </clipPath>
+    <rect ovd:fill="{color.surface}" fill="var(--color-surface, #ffffff)" height="844" width="390"/>
+    <text id="t_signin" ovd:type="text" ovd:name="Title" ovd:box="auto-width" ovd:content="Sign in" ovd:fill="{color.text}" ovd:height="38.4" ovd:line-height="1.2" ovd:sizing="hug" ovd:text-style="{typography.heading.xl}" ovd:width="120" fill="var(--color-text, #111319)" font-family="Inter, sans-serif" font-size="32" font-weight="700" transform="translate(24 24)">
+      <tspan x="0" y="28.8">Sign in</tspan>
+    </text>
+    <use id="i_email" ovd:type="instance" ovd:name="Email" ovd:sizing="fill fixed" height="72" href="../components/input.svg#c_input" width="342" x="24" y="78.4">
+      <ovd:override target="label" text="Email"/>
+      <ovd:override target="placeholder" text="you@example.com"/>
+    </use>
+    <use id="i_password" ovd:type="instance" ovd:name="Password" ovd:sizing="fill fixed" ovd:variant="state=focused" height="72" href="../components/input.svg#c_input" width="342" x="24" y="166.4">
+      <ovd:override target="label" text="Password"/>
+      <ovd:override target="placeholder" text="••••••••"/>
+    </use>
+    <use id="i_submit" ovd:type="instance" ovd:name="Submit" ovd:sizing="fill fixed" height="44" href="../components/button.svg#c_button" width="342" x="24" y="254.4">
+      <ovd:override target="label" text="Sign in"/>
+    </use>
+  </g>
+</svg>

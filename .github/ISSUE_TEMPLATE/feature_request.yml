@@ -1,0 +1,59 @@
+name: ✨ Feature
+description: Propose a new capability or enhancement
+title: "area: <short summary>"
+labels: ["type:feature", "status:triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / why
+      description: What user or business problem does this solve? Why now?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: The checklist that defines "done".
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+    validations:
+      required: false
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / related issues
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - format (packages/ovd-core)
+        - canvas
+        - panels (layers / properties)
+        - components
+        - layout
+        - tokens
+        - io (open / save / import / export)
+        - git
+        - viewer
+        - ui (packages/ui)
+        - infra / build / tooling
+        - docs
+    validations:
+      required: false
