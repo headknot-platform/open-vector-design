@@ -1,4 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:ovd="https://ovd.dev/ns/0.1" ovd:type="library" ovd:name="Button" ovd:version="0.1">
+  <style ovd:generated="tokens">
+:root {
+  --color-border: #dde1e8;
+  --color-on-primary: #ffffff;
+  --color-primary: #4f46e5;
+  --color-surface: #ffffff;
+  --color-text: #111319;
+  --spacing-md: 16px;
+  --spacing-sm: 8px;
+  --spacing-xs: 4px;
+  --typography-label-md: 600 15px/1.2 Inter, sans-serif;
+}
+</style>
   <defs>
     <symbol id="c_button" ovd:type="component-set" ovd:name="Button" ovd:default="variant=primary,size=md" ovd:props='{"variant":["primary","secondary"],"size":["md","sm"],"label":"text"}'>
       <symbol id="c_button__primary_md" ovd:type="component" ovd:name="Primary / md" ovd:align="center" ovd:direction="row" ovd:gap="0" ovd:justify="center" ovd:layout="flex" ovd:padding="{spacing.sm} {spacing.md}" ovd:variant="variant=primary,size=md" height="44" viewBox="0 0 160 44" width="160">

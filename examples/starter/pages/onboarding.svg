@@ -1,4 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:ovd="https://ovd.dev/ns/0.1" ovd:type="page" ovd:name="Onboarding" ovd:version="0.1" viewBox="-100 -100 1080 1044">
+  <style ovd:generated="tokens">
+:root {
+  --color-accent: #ec4899;
+  --color-primary: #4f46e5;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef0f4;
+  --color-text: #111319;
+  --color-text-muted: #6b7280;
+  --motion-fast: 150ms;
+  --spacing-lg: 24px;
+  --spacing-md: 16px;
+  --typography-body-md: 400 16px/1.5 Inter, sans-serif;
+  --typography-heading-xl: 700 32px/1.2 Inter, sans-serif;
+}
+</style>
   <g id="f_welcome" ovd:type="frame" ovd:name="Welcome / Mobile" ovd:clip="true" ovd:height="844" ovd:width="390" clip-path="url(#f_welcome__clip)" transform="translate(0 0)">
     <title>Welcome screen</title>
     <clipPath id="f_welcome__clip">

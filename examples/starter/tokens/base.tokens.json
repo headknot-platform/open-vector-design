@@ -150,6 +150,31 @@
       }
     }
   },
+  "motion": {
+    "ease": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.2,
+        0,
+        0,
+        1
+      ]
+    },
+    "fast": {
+      "$type": "duration",
+      "$value": {
+        "unit": "ms",
+        "value": 150
+      }
+    },
+    "slow": {
+      "$type": "duration",
+      "$value": {
+        "unit": "ms",
+        "value": 300
+      }
+    }
+  },
   "radius": {
     "$type": "dimension",
     "lg": {
