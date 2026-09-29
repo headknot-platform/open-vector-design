@@ -1,0 +1,47 @@
+# ---- Node / Monorepo basics ----
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+npm-debug.log*
+*.log
+
+# Keep pnpm lockfile; ignore other lockfiles
+package-lock.json
+yarn.lock
+
+# ---- Build output ----
+dist/
+build/
+out/
+
+# Vite / Turbo caches
+.vite/
+**/.vite/
+.turbo/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Coverage / reports
+coverage/
+playwright-report/
+test-results/
+
+# ESLint cache
+.eslintcache
+
+# Env & secrets (keep examples!)
+.env*
+!.env.example
+
+# OS / Editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Claude Code — per-machine permissions stay local
+.claude/settings.local.json
