@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:ovd="https://ovd.dev/ns/0.1" ovd:type="library" ovd:name="Input" ovd:version="0.1">
+  <style ovd:generated="tokens">
+:root {
+  --color-border: #dde1e8;
+  --color-primary: #4f46e5;
+  --color-surface: #ffffff;
+  --color-text: #111319;
+  --color-text-muted: #6b7280;
+}
+</style>
   <defs>
     <symbol id="c_input" ovd:type="component-set" ovd:name="Input" ovd:default="state=default" ovd:props='{"state":["default","focused"],"label":"text","placeholder":"text"}'>
       <symbol id="c_input__default" ovd:type="component" ovd:name="Default" ovd:clip="false" ovd:variant="state=default" height="72" overflow="visible" viewBox="0 0 342 72" width="342">

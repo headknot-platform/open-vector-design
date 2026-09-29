@@ -72,3 +72,16 @@ on every write.
 place to apply one.
 *Implemented:* `ovd:shadow="x y blur spread color"` plus a `filter="drop-shadow(…)"` fallback for
 plain viewers (CSS drop-shadow has no spread).
+
+**13. Which tokens go in the generated `<style>`.** "A `<style>` block of CSS custom properties
+generated from the active theme" could mean every token. Then editing one colour rewrites every page
+file in the repo.
+*Implemented:* only the tokens the file references, sorted, one declaration per line. Each
+token-bound fallback (`var(--x, fallback)`) is also refreshed to the resolved value on write.
+
+**14. "Active theme" when writing.** If files were written with the theme the editor is previewing,
+toggling dark mode and saving would rewrite every file.
+*Implemented:* files are always written with a default theme — `light` if the manifest has one,
+otherwise the first theme A–Z. (Not "the first key": canonical JSON sorts keys, so `dark` would
+silently become the default after the first `ovd fmt`.)
+*Suggested:* an optional `defaultTheme` in the manifest.

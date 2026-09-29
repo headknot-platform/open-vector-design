@@ -1,6 +1,37 @@
 /** `ovd validate` (spec §10): structural checks a writer must satisfy. */
 import { resolveInstance } from './components';
 import { type Project, type SceneNode, walk } from './model';
+import { collectTokenRefs, componentFileNodes } from './refs';
+import { listThemes, projectTokens } from './tokens';
+
+function checkTokens(project: Project, issues: Issue[]): void {
+    const seen = new Set<string>();
+    const themes = listThemes(project.manifest);
+    // Each theme layers its own files, so each can introduce its own broken alias.
+    for (const theme of themes.length ? themes : [undefined]) {
+        for (const e of projectTokens(project, theme).errors) {
+            const message = `token {${e.path}} ${e.message}`;
+            if (seen.has(e.source + message)) continue;
+            seen.add(e.source + message);
+            issues.push({ severity: 'error', file: e.source, message });
+        }
+    }
+    const set = projectTokens(project);
+    const files = [
+        ...project.pages.map((p) => ({ file: p.file, nodes: p.children })),
+        ...project.components.map((c) => ({ file: c.file, nodes: componentFileNodes(c) })),
+    ];
+    for (const { file, nodes } of files) {
+        for (const ref of collectTokenRefs(nodes)) {
+            if (set.tokens.has(ref)) continue;
+            issues.push({
+                severity: 'warning',
+                file,
+                message: `uses token {${ref}}, which does not exist; it falls back to its plain value`,
+            });
+        }
+    }
+}
 
 export interface Issue {
     severity: 'error' | 'warning';
@@ -99,5 +130,6 @@ export function validateProject(project: Project): Issue[] {
             });
         }
     }
+    checkTokens(project, issues);
     return issues;
 }

@@ -5,6 +5,8 @@
 import { canonicalJson } from './json';
 import type { Manifest, Project, TokenDocument } from './model';
 import { readComponentFile, readPage } from './read';
+import { collectTokenRefs, componentFileNodes, refreshFallbacks } from './refs';
+import { projectTokens, tokensToCss } from './tokens';
 import { type WriteOptions, writeComponentFile, writePage } from './write';
 
 export type FileMap = Record<string, string | Uint8Array>;
@@ -128,6 +130,9 @@ export function readProject(files: FileMap): Project {
 export interface ProjectWriteOptions extends WriteOptions {
     /** Extra files to add or replace (e.g. flattened exports, spec §5). */
     generated?: FileMap;
+    /** Theme for the generated `<style>` blocks and fallbacks. Defaults to `defaultTheme()`, not
+     *  the editor's preview theme, so toggling light/dark never produces a diff. */
+    theme?: string;
 }
 
 export function writeProject(project: Project, opts: ProjectWriteOptions = {}): FileMap {
@@ -137,8 +142,21 @@ export function writeProject(project: Project, opts: ProjectWriteOptions = {}): 
         pages: project.pages.map((p) => ({ file: p.file, name: p.name })),
     };
     out[MANIFEST_FILE] = canonicalJson(manifest);
-    for (const page of project.pages) out[page.file] = writePage(page, opts);
-    for (const file of project.components) out[file.file] = writeComponentFile(file, opts);
+
+    const set = projectTokens(project, opts.theme);
+    for (const source of project.pages) {
+        const page = structuredClone(source);
+        refreshFallbacks(page.children, set);
+        const tokenCss = tokensToCss(set, collectTokenRefs(page.children));
+        out[page.file] = writePage(page, { ...opts, tokenCss });
+    }
+    for (const source of project.components) {
+        const file = structuredClone(source);
+        const nodes = componentFileNodes(file);
+        refreshFallbacks(nodes, set);
+        const tokenCss = tokensToCss(set, collectTokenRefs(nodes));
+        out[file.file] = writeComponentFile(file, { ...opts, tokenCss });
+    }
     for (const [path, doc] of Object.entries(project.tokens)) out[path] = canonicalJson(doc);
     for (const [path, bytes] of Object.entries(project.assets)) out[path] = bytes;
     for (const [path, thread] of Object.entries(project.comments))
