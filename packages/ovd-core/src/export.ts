@@ -149,9 +149,14 @@ function literalise(n: SceneNode | FrameNode, ctx: Ctx): SceneNode {
     return copy;
 }
 
-/** Removes every ovd:* attribute and element, and the namespace declaration. */
-function strip(node: XmlElement): XmlElement {
+/** Removes every ovd:* attribute and element, and the namespace declaration. Top-level frames
+ *  keep their name as `aria-label` (spec §2: ARIA for accessibility metadata). */
+function strip(node: XmlElement, depth = 0): XmlElement {
     const attrs: Record<string, string> = {};
+    if (depth === 1 && node.attrs['ovd:type'] === 'frame' && node.attrs['ovd:name']) {
+        attrs['aria-label'] = node.attrs['ovd:name'];
+        attrs['role'] = 'group';
+    }
     for (const [k, v] of Object.entries(node.attrs)) {
         if (k.startsWith('ovd:') || k === 'xmlns:ovd') continue;
         attrs[k] = v;
@@ -160,7 +165,7 @@ function strip(node: XmlElement): XmlElement {
     for (const c of node.children) {
         if (c.kind === 'element') {
             if (c.name.startsWith('ovd:')) continue;
-            children.push(strip(c));
+            children.push(strip(c, depth + 1));
         } else children.push(c);
     }
     return { ...node, attrs, children };

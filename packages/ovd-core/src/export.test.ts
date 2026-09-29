@@ -41,6 +41,10 @@ describe('flattened export (spec §5, §11 level 1)', () => {
         expect(exportPageSvg(project, page, { theme: 'dark' })).toContain('fill="#818cf8"');
     });
 
+    it('names top-level frames for assistive tech and viewers', () => {
+        expect(exportPageSvg(project, page)).toContain('aria-label="Welcome / Mobile"');
+    });
+
     it('keeps prototype links as plain SVG links', () => {
         expect(exportPageSvg(project, page)).toContain('<a href="#f_signin">');
     });
