@@ -3,11 +3,13 @@
  *
  *   pnpm --filter @workspace/ovd-core ovd fmt <project-dir>
  *   pnpm --filter @workspace/ovd-core ovd validate <project-dir>
+ *   pnpm --filter @workspace/ovd-core ovd diff <before-dir> <after-dir>
  */
 import { readFileSync, readdirSync, statSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { type FileMap, asBytes, readProject, writeProject } from './project';
 import { validateProject } from './validate';
+import { diffProjects, formatDiff } from './diff';
 
 const TEXT = /\.(svg|json|md|txt|css)$|^\.git\w+$/;
 
@@ -37,13 +39,29 @@ function same(a: string | Uint8Array | undefined, b: string | Uint8Array): boole
 }
 
 function main(argv: string[]): number {
-    const [cmd, dirArg] = argv;
-    if (!cmd || !dirArg || !['fmt', 'validate'].includes(cmd)) {
-        console.error('usage: ovd <fmt|validate> <project-dir>');
+    const [cmd, dirArg, otherArg] = argv;
+    if (
+        !cmd ||
+        !dirArg ||
+        !['fmt', 'validate', 'diff'].includes(cmd) ||
+        (cmd === 'diff' && !otherArg)
+    ) {
+        console.error(
+            'usage: ovd <fmt|validate> <project-dir>\n       ovd diff <before-dir> <after-dir>',
+        );
         return 2;
     }
     // pnpm --filter runs scripts from the package directory; resolve against the caller's cwd.
-    const root = resolve(process.env['INIT_CWD'] ?? process.cwd(), dirArg);
+    const cwd = process.env['INIT_CWD'] ?? process.cwd();
+    const root = resolve(cwd, dirArg);
+    if (cmd === 'diff') {
+        const changes = diffProjects(
+            readProject(readDir(root)),
+            readProject(readDir(resolve(cwd, otherArg!))),
+        );
+        console.log(changes.length ? formatDiff(changes) : 'no changes');
+        return changes.length ? 1 : 0;
+    }
     const files = readDir(root);
     const project = readProject(files);
 
