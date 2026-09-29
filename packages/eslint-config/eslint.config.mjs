@@ -11,6 +11,9 @@ export default [
             '**/dist/**',
             '**/build/**',
             '**/.turbo/**',
+            // Vite's dependency cache (pre-bundled, minified third-party code) can land in an app
+            // folder; linting it took minutes and says nothing about our code.
+            '**/.vite/**',
             '**/node_modules/**',
             '**/coverage/**',
             // OVD project files — written by the canonical serialiser, not by hand.
