@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ovd.dev/schema/0.1/manifest.json",
+  "exports": "exports/",
+  "id": "urn:uuid:3b1f7c2e-5a4d-4e8b-9c0f-1d2e3f4a5b6c",
+  "name": "Starter",
+  "pages": [
+    {
+      "file": "pages/onboarding.svg",
+      "name": "Onboarding"
+    },
+    {
+      "file": "pages/dashboard.svg",
+      "name": "Dashboard"
+    }
+  ],
+  "themes": {
+    "dark": [
+      "tokens/themes/dark.tokens.json"
+    ],
+    "light": [
+      "tokens/themes/light.tokens.json"
+    ]
+  },
+  "tokens": [
+    "tokens/base.tokens.json"
+  ],
+  "version": "0.1"
+}

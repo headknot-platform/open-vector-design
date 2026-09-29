@@ -1,0 +1,34 @@
+{
+  "color": {
+    "$type": "color",
+    "background": {
+      "$value": "{color.neutral.900}"
+    },
+    "border": {
+      "$value": "{color.neutral.700}"
+    },
+    "primary": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.506,
+          0.549,
+          0.973
+        ],
+        "hex": "#818cf8"
+      }
+    },
+    "surface": {
+      "$value": "{color.neutral.800}"
+    },
+    "surface-muted": {
+      "$value": "{color.neutral.700}"
+    },
+    "text": {
+      "$value": "{color.neutral.0}"
+    },
+    "text-muted": {
+      "$value": "{color.neutral.200}"
+    }
+  }
+}
