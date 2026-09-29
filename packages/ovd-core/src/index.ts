@@ -15,3 +15,4 @@ export * from './refs';
 export * from './layout';
 export * from './export';
 export * from './diff';
+export * from './import-sketch';
