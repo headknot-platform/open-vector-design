@@ -85,3 +85,14 @@ toggling dark mode and saving would rewrite every file.
 otherwise the first theme A–Z. (Not "the first key": canonical JSON sorts keys, so `dark` would
 silently become the default after the first `ovd fmt`.)
 *Suggested:* an optional `defaultTheme` in the manifest.
+
+## Rendering (§4, §5)
+
+**15. `var()` in presentation attributes.** §4 pairs every token with `fill="var(--x, fallback)"`
+in a presentation attribute. CSS custom properties in presentation attributes are not something every
+SVG renderer supports. *Checked:* Chromium (as `<img>` and inline) resolves them correctly — a source
+page rasterised with no OVD code shows token colours. *Not yet checked:* Firefox, Safari, and non-browser
+renderers (Inkscape, librsvg, image previews on Git hosts). Flattened exports (§5) write literal colours
+and are safe everywhere, which is one more reason viewers should read exports.
+*Suggested:* state that viewers must not rely on `var()` in source files, or move fallbacks to
+`style="fill: var(--x, fallback)"`, which has broader support.
