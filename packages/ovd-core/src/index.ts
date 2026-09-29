@@ -14,3 +14,4 @@ export * from './tokens';
 export * from './refs';
 export * from './layout';
 export * from './export';
+export * from './diff';
