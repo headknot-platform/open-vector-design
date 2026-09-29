@@ -4,11 +4,16 @@ import {
     type ComponentNode,
     type ComponentSet,
     type InstanceNode,
+    type Override,
     type Project,
+    type SceneNode,
+    childrenOf,
     formatVariant,
     parseVariant,
 } from './model';
+import { type LayoutContext, applyConstraints, layoutNode } from './layout';
 import { relativePath, resolveRelative } from './paths';
+import { approxMeasure, relayoutText } from './text';
 
 export interface HrefParts {
     /** Library name for `lib:path#id` references. */
@@ -101,3 +106,70 @@ export function resolveInstance(
 }
 
 export { formatVariant };
+
+// ---------------------------------------------------------------------------------------------
+// Instance content — what an instance actually shows (canvas and flattened export share this)
+// ---------------------------------------------------------------------------------------------
+
+export interface InstanceContent extends ResolvedComponent {
+    /** A private copy of the variant with overrides applied, laid out at the instance's size. */
+    root: ComponentNode;
+}
+
+function applyOverrides(root: ComponentNode, overrides: Override[], ctx: LayoutContext): void {
+    if (!overrides.length) return;
+    const byId = new Map(overrides.map((o) => [o.target, o]));
+    const visit = (nodes: SceneNode[]) => {
+        for (const n of nodes) {
+            const o = byId.get(n.id);
+            if (o) {
+                if (o.hidden !== undefined) n.hidden = o.hidden;
+                if (o.fill && 'fill' in n) {
+                    n.fill = {
+                        color: o.fill.color || n.fill?.color || '#000000',
+                        token: o.fill.token,
+                    };
+                }
+                if (o.stroke && 'stroke' in n) {
+                    const base = n.stroke ?? { paint: { color: '#000000' }, width: 1 };
+                    n.stroke = {
+                        ...base,
+                        paint: { color: o.stroke.color || base.paint.color, token: o.stroke.token },
+                    };
+                }
+                if (o.text !== undefined && n.type === 'text') {
+                    n.content = o.text;
+                    relayoutText(n, ctx.measure ?? approxMeasure);
+                }
+                if (o.swap !== undefined && n.type === 'instance') n.href = o.swap;
+            }
+            const kids = childrenOf(n);
+            if (kids) visit(kids);
+        }
+    };
+    visit(root.children);
+}
+
+/**
+ * Resolves an instance to its content: the chosen variant, overrides applied (spec §5), laid out
+ * at the instance's size — so a 160px button placed 342px wide centres its label instead of
+ * stretching it. Returns undefined when the component cannot be found.
+ */
+export function instanceContent(
+    project: Project,
+    fromFile: string,
+    inst: Pick<InstanceNode, 'href' | 'variant' | 'overrides' | 'width' | 'height'>,
+    ctx: LayoutContext = {},
+): InstanceContent | undefined {
+    const resolved = resolveInstance(project, fromFile, inst);
+    if (!resolved) return undefined;
+    const root = structuredClone(resolved.variant);
+    applyOverrides(root, inst.overrides, ctx);
+    const oldW = root.width;
+    const oldH = root.height;
+    root.width = inst.width || oldW;
+    root.height = inst.height || oldH;
+    if (root.layout.mode === 'flex') layoutNode(root, ctx);
+    else applyConstraints(root, oldW, oldH, ctx);
+    return { ...resolved, root };
+}
