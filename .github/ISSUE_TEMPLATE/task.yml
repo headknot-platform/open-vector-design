@@ -1,0 +1,45 @@
+name: 🔧 Task / Chore
+description: Maintenance, refactor, tooling, infra, or other non-feature work
+title: "area: <short summary>"
+labels: ["type:task", "status:triage"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What needs doing
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - format (packages/ovd-core)
+        - canvas
+        - panels (layers / properties)
+        - components
+        - layout
+        - tokens
+        - io (open / save / import / export)
+        - git
+        - viewer
+        - ui (packages/ui)
+        - infra / build / tooling
+        - docs
+    validations:
+      required: false

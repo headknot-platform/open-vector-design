@@ -1,0 +1,23 @@
+{
+  "color": {
+    "$type": "color",
+    "background": {
+      "$value": "{color.neutral.50}"
+    },
+    "border": {
+      "$value": "{color.neutral.200}"
+    },
+    "surface": {
+      "$value": "{color.neutral.0}"
+    },
+    "surface-muted": {
+      "$value": "{color.neutral.100}"
+    },
+    "text": {
+      "$value": "{color.neutral.900}"
+    },
+    "text-muted": {
+      "$value": "{color.neutral.500}"
+    }
+  }
+}
