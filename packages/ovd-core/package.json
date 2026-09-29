@@ -1,0 +1,26 @@
+{
+    "name": "@workspace/ovd-core",
+    "version": "0.1.0",
+    "type": "module",
+    "private": true,
+    "description": "Framework-free reader, writer and tooling for the Open Vector Design (OVD) format.",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "scripts": {
+        "lint": "eslint . --max-warnings 0",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "ovd": "tsx src/cli.ts"
+    },
+    "devDependencies": {
+        "@types/node": "^22.18.0",
+        "@workspace/eslint-config": "workspace:*",
+        "@workspace/typescript-config": "workspace:*",
+        "eslint": "^9.39.0",
+        "tsx": "^4.20.6",
+        "typescript": "~5.9.3",
+        "vitest": "^3.2.4"
+    }
+}
