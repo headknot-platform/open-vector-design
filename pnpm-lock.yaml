@@ -95,7 +95,7 @@ importers:
         specifier: ^26.1.0
         version: 26.1.0
       rollup-plugin-license:
-        specifier: ^3
+        specifier: ^3.7.1
         version: 3.7.1(picomatch@4.0.7)(rollup@4.63.5)
       tailwindcss:
         specifier: ^4.1.14

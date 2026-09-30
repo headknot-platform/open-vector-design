@@ -16,7 +16,7 @@ it is licensed under the same terms (Apache-2.0 §5, "inbound = outbound").
 4. **Run the gate locally** — there is no CI:
 
     ```bash
-    pnpm test && pnpm typecheck && pnpm lint && pnpm --filter @ovd/standalone build
+    pnpm install --frozen-lockfile && pnpm test && pnpm typecheck && pnpm lint && pnpm --filter @ovd/standalone build
     ```
 
 5. **Open a PR into `dev`** and say what you verified and what you did not.

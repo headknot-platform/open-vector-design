@@ -19,7 +19,7 @@ Issue first → branch `type/<issue#>-slug` from `dev` → Conventional Commits 
 **merge commit, never squash**. See [`CONTRIBUTING.md`](CONTRIBUTING.md). There is no CI; the gate is
 
 ```bash
-pnpm test && pnpm typecheck && pnpm lint && pnpm --filter @ovd/standalone build
+pnpm install --frozen-lockfile && pnpm test && pnpm typecheck && pnpm lint && pnpm --filter @ovd/standalone build
 ```
 
 ## Workspace Map
