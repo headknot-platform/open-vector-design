@@ -54,7 +54,7 @@ export function Workspace() {
     const host: EditorHost = {
         commands,
         fileMenu: {
-            logo: '/favicon.svg',
+            logo: `${import.meta.env.BASE_URL}favicon.svg`,
             sections: [
                 [
                     { label: 'New project', onSelect: newProject },

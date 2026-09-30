@@ -328,3 +328,13 @@ export async function closeProject(): Promise<void> {
     useLocal.setState({ folder: null, saving: false, lastSaved: null });
     if (project === savedProject) await discardSnapshot();
 }
+
+/** A link with `?starter` (the demo) opens the starter project once; the parameter is removed so a
+ *  reload does not replace the work with a fresh starter. */
+export function openStarterFromLink(): void {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has('starter')) return;
+    url.searchParams.delete('starter');
+    window.history.replaceState(null, '', url);
+    newProject();
+}
