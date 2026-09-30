@@ -8,9 +8,10 @@ import {
     DropdownMenuTrigger,
 } from '@workspace/ui/components/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { useHost } from '../host';
 import { editor, useEditor } from '../state/store';
+import { ProblemsDialog } from './ProblemsDialog';
 
 /** The OVD mark, for hosts that bring no logo of their own. */
 function OvdMark() {
@@ -34,52 +35,60 @@ export function FileMenu() {
     const { fileMenu } = useHost();
     const name = useEditor((s) => s.source?.name);
     const label = fileMenu?.label ?? name ?? 'No project';
+    const [problems, setProblems] = useState(false);
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <button
-                    className="hover:bg-accent flex h-8 items-center gap-1 rounded-md pr-1.5 pl-1"
-                    aria-label="File menu"
-                >
-                    {fileMenu?.logo ? (
-                        <img src={fileMenu.logo} alt="" className="size-6" />
-                    ) : (
-                        <OvdMark />
-                    )}
-                    <ChevronDown className="text-muted-foreground size-3" />
-                </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-64">
-                <DropdownMenuLabel className="text-muted-foreground text-[11px] font-normal">
-                    {label}
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {fileMenu?.sections?.map((section, i) => (
-                    <Fragment key={i}>
-                        {section.map((item) => (
-                            <DropdownMenuItem
-                                key={item.label}
-                                disabled={item.disabled}
-                                onSelect={item.onSelect}
-                            >
-                                {item.label}
-                                {item.shortcut && (
-                                    <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>
-                                )}
-                            </DropdownMenuItem>
-                        ))}
-                        <DropdownMenuSeparator />
-                    </Fragment>
-                ))}
-                <DropdownMenuItem onSelect={() => editor().undo()}>
-                    Undo
-                    <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => editor().redo()}>
-                    Redo
-                    <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <button
+                        className="hover:bg-accent flex h-8 items-center gap-1 rounded-md pr-1.5 pl-1"
+                        aria-label="File menu"
+                    >
+                        {fileMenu?.logo ? (
+                            <img src={fileMenu.logo} alt="" className="size-6" />
+                        ) : (
+                            <OvdMark />
+                        )}
+                        <ChevronDown className="text-muted-foreground size-3" />
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-64">
+                    <DropdownMenuLabel className="text-muted-foreground text-[11px] font-normal">
+                        {label}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {fileMenu?.sections?.map((section, i) => (
+                        <Fragment key={i}>
+                            {section.map((item) => (
+                                <DropdownMenuItem
+                                    key={item.label}
+                                    disabled={item.disabled}
+                                    onSelect={item.onSelect}
+                                >
+                                    {item.label}
+                                    {item.shortcut && (
+                                        <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>
+                                    )}
+                                </DropdownMenuItem>
+                            ))}
+                            <DropdownMenuSeparator />
+                        </Fragment>
+                    ))}
+                    <DropdownMenuItem onSelect={() => setProblems(true)}>
+                        Validate project…
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onSelect={() => editor().undo()}>
+                        Undo
+                        <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => editor().redo()}>
+                        Redo
+                        <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <ProblemsDialog open={problems} onOpenChange={setProblems} />
+        </>
     );
 }

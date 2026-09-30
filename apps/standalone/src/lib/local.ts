@@ -62,7 +62,8 @@ function same(a: string | Uint8Array | undefined, b: string | Uint8Array): boole
     return x.length === y.length && x.every((v, i) => v === y[i]);
 }
 
-function download(bytes: Uint8Array, name: string, type: string): void {
+/** Hands a file to the browser as a download. */
+export function download(bytes: Uint8Array | string, name: string, type: string): void {
     const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type }));
     const a = document.createElement('a');
     a.href = url;

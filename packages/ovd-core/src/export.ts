@@ -15,7 +15,7 @@ import {
 } from './model';
 import { basename, joinPath, resolveRelative } from './paths';
 import type { Measure } from './text';
-import { type TokenSet, projectTokens, tokenColor } from './tokens';
+import { type TokenSet, projectTokens, tokenColor, tokensToCss } from './tokens';
 import { type XmlElement, type XmlNode, serializeXml } from './xml';
 import { pageToXml } from './write';
 import { type FileMap, writeProject } from './project';
@@ -219,4 +219,24 @@ export function packageFiles(project: Project, opts: ExportOptions = {}): FileMa
     for (const path of Object.keys(files))
         if (path.startsWith(folder) && !(path in generated)) delete files[path];
     return files;
+}
+
+/** Tokens for a theme, aliases resolved, as nested DTCG (`$type`, `$value`) — what the server's
+ *  `/export/tokens.json` serves and the standalone editor downloads. */
+export function tokensJson(project: Project, theme?: string): Record<string, unknown> {
+    const set = projectTokens(project, theme);
+    const out: Record<string, unknown> = {};
+    for (const [path, token] of set.tokens) {
+        let group = out;
+        const parts = path.split('.');
+        for (const part of parts.slice(0, -1))
+            group = (group[part] ??= {}) as Record<string, unknown>;
+        group[parts[parts.length - 1]!] = { $type: token.type, $value: token.resolved };
+    }
+    return out;
+}
+
+/** Tokens for a theme as CSS custom properties on `:root` — the same `--names` the exports use. */
+export function tokensCss(project: Project, theme?: string): string {
+    return tokensToCss(projectTokens(project, theme)).trimStart();
 }
