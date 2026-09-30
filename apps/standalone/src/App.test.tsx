@@ -62,4 +62,16 @@ describe('the standalone editor (#69)', () => {
         const card = await screen.findByRole('region', { name: 'Unsaved work' });
         expect(card).toHaveTextContent('Untitled');
     });
+
+    it('opens the starter from a ?starter link, once', async () => {
+        const { openStarterFromLink } = await import('./lib/local');
+        window.history.pushState(null, '', '/');
+        openStarterFromLink();
+        expect(editor().project).toBeNull();
+
+        window.history.pushState(null, '', '/?starter&x=1');
+        openStarterFromLink();
+        expect(editor().project?.pages.length).toBeGreaterThan(0);
+        expect(window.location.search).toBe('?x=1');
+    });
 });

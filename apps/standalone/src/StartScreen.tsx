@@ -31,7 +31,7 @@ export function StartScreen() {
             {pickers.inputs}
             <div className="flex w-full max-w-md flex-col gap-6">
                 <header className="flex items-center gap-3">
-                    <img src="/favicon.svg" alt="" className="size-9" />
+                    <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className="size-9" />
                     <div>
                         <h1 className="text-lg font-semibold">OVD Editor</h1>
                         <p className="text-muted-foreground text-xs">

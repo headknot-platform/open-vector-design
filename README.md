@@ -18,6 +18,8 @@ a plain folder of files that diff, review and merge like code.
 
 ## The OVD Editor
 
+**Try it:** [headknot-platform.github.io/open-vector-design](https://headknot-platform.github.io/open-vector-design/?starter) — opens in the starter project. Nothing you do there leaves your browser.
+
 A free editor you can run anywhere, with no account and no server. It makes no network requests at
 all — your files stay on your computer.
 
@@ -32,6 +34,13 @@ pnpm install
 pnpm dev:standalone        # http://localhost:5174
 pnpm build:standalone      # static files in apps/standalone/dist — host them anywhere
 ```
+
+### Self-hosting
+
+`pnpm build:standalone` writes a self-contained static site to `apps/standalone/dist`. Copy that folder
+to any static host — a domain root or a sub-path, GitHub Pages, an S3 bucket, an intranet share. It
+needs no server, no configuration and no build-time settings, and makes no requests beyond its own
+files. Add `?starter` to the URL to open straight into the starter project.
 
 ## Embedding the editor
 
