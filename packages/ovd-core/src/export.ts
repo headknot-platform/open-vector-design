@@ -18,6 +18,7 @@ import type { Measure } from './text';
 import { type TokenSet, projectTokens, tokenColor } from './tokens';
 import { type XmlElement, type XmlNode, serializeXml } from './xml';
 import { pageToXml } from './write';
+import { type FileMap, writeProject } from './project';
 
 export interface ExportOptions {
     /** Theme to resolve tokens with (default theme when omitted). */
@@ -205,4 +206,10 @@ export function exportAll(project: Project, opts: ExportOptions = {}): Record<st
     for (const page of project.pages)
         out[exportPath(project, page)] = exportPageSvg(project, page, opts);
     return out;
+}
+
+/** Everything a package folder holds after a save: canonical sources plus flattened exports (§5).
+ * The server's save and `ovd export` both write this, so they cannot disagree. */
+export function packageFiles(project: Project, opts: ExportOptions = {}): FileMap {
+    return writeProject(project, { generated: exportAll(project, opts) });
 }
