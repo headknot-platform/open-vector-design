@@ -114,6 +114,8 @@ a Git repository (`docs/projects.md`), and a download or upload carries the fold
 relative paths. The server sends a download as `<name>.tar.gz` with one top folder (#39): it streams,
 it is standard, and macOS, Windows 11 and `tar -xzf` all unpack it — as a folder. The archive is how
 the folder travels, not a project format: nothing reads a project from it without unpacking.
+Imports accept the same two shapes back: the folder's files with their relative paths (a folder
+picker's upload), or that `.tar.gz` (#14).
 *Suggested:* replace the §3 sentence with "An OVD project is a package: a folder with `manifest.json`
 at its root, stored and shared as a folder (usually a Git repository). There is no single-file
 container." — and in §12 item 8, replace "`.ovd` ZIP" with "a download of the package folder".
