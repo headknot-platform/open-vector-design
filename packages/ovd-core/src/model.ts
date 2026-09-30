@@ -280,6 +280,12 @@ export interface Project {
     comments: Record<string, unknown>;
     /** Any other file in the project folder, preserved as-is (README, .gitattributes, exports/…). */
     other: Record<string, string | Uint8Array>;
+    /**
+     * Loaded manifest libraries by name (spec §3) — supplied at runtime by a host that fetched
+     * them, never read from or written to the package. Their component files resolve as
+     * `name:components/file.svg`.
+     */
+    libraries?: Record<string, Project>;
 }
 
 // ---------------------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
  * tokens replaced by literal values for one theme, images inlined, and no `ovd:` markup left — a
  * self-contained SVG that any viewer renders exactly.
  */
-import { instanceContent } from './components';
+import { assetOf, instanceContent } from './components';
 import {
     type ComponentNode,
     type FrameNode,
@@ -116,8 +116,8 @@ function flattenNodes(nodes: SceneNode[], fromFile: string, ctx: Ctx): SceneNode
             ctx.opts.inlineImages !== false &&
             !/^(data:|https?:)/.test(n.href)
         ) {
-            const path = resolveRelative(fromFile, n.href);
-            const bytes = ctx.project.assets[path];
+            const path = resolveRelative(fromFile.replace(/^[\w-]+:(?!\/\/)/, ''), n.href);
+            const bytes = assetOf(ctx.project, fromFile, n.href);
             if (bytes) {
                 const ext = path.split('.').pop()?.toLowerCase() ?? '';
                 n = {
