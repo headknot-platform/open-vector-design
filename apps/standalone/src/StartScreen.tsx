@@ -135,6 +135,35 @@ export function StartScreen() {
                         </ul>
                     </section>
                 )}
+
+                <footer className="text-muted-foreground flex gap-1.5 text-[11px]">
+                    <a
+                        className="hover:text-foreground underline-offset-2 hover:underline"
+                        href="https://github.com/headknot-platform/open-vector-design"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        Open source
+                    </a>
+                    ·
+                    <a
+                        className="hover:text-foreground underline-offset-2 hover:underline"
+                        href="https://github.com/headknot-platform/open-vector-design/blob/dev/LICENSE"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        Apache-2.0
+                    </a>
+                    ·
+                    <a
+                        className="hover:text-foreground underline-offset-2 hover:underline"
+                        href={`${import.meta.env.BASE_URL}third-party-notices.txt`}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        Third-party notices
+                    </a>
+                </footer>
             </div>
         </main>
     );
