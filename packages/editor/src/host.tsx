@@ -7,7 +7,7 @@
  * `editor().loadProject(project, source)` and `useEditor.subscribe(...)` to save changes, and
  * `editor().markSaved()` once they are stored.
  */
-import type { AnyNode } from '@workspace/ovd-core';
+import type { AnyNode, ManifestLibrary, Project } from '@workspace/ovd-core';
 import type { LucideIcon } from 'lucide-react';
 import { type ComponentType, type ReactNode, createContext, useContext } from 'react';
 import type { Point } from './lib/geometry';
@@ -53,6 +53,11 @@ export interface LibraryStatus {
     error: string | null;
 }
 
+/** A library at its ref, as the host resolved it; `project` is its files once resolved. */
+export interface ResolvedLibrary extends LibraryStatus {
+    project?: Project;
+}
+
 /** Keyboard commands the host implements; the editor owns the one keymap. */
 export interface HostCommands {
     /** ⌘S */
@@ -83,12 +88,17 @@ export interface EditorHost {
     tools?: HostTool[];
     /** Drawn over the canvas, in screen space; `toScreen(vp, point)` places document points. */
     canvasLayers?: ComponentType<{ vp: Viewport }>[];
-    /**
-     * Manifest libraries: what the host resolved, and whether the user may change the list. Without
-     * it the list is editable and shown without status. Resolved files reach the canvas through
-     * `editor().setLibraries(...)`.
-     */
-    libraries?: { status: LibraryStatus[]; editable: boolean };
+    /** Manifest libraries (spec §3). Without `resolve` the list is editable but never loaded. */
+    libraries?: {
+        /** Whether the user may change the list (default true). */
+        editable?: boolean;
+        /**
+         * Fetches the libraries at their refs. The editor calls it when a project opens and whenever
+         * the list changes (edit, undo, restore), ignores answers that arrive after a newer call,
+         * and puts the result on the canvas and in the Libraries section. It may answer from a cache.
+         */
+        resolve?(libraries: ManifestLibrary[]): Promise<ResolvedLibrary[]>;
+    };
     commands?: HostCommands;
     /** Rendered once inside the editor: the host's dialogs, sheets and hidden file inputs. */
     overlays?: ReactNode;

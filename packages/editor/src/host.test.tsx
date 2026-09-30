@@ -1,11 +1,23 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import type { ManifestLibrary } from '@workspace/ovd-core';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Pin } from 'lucide-react';
 import { describe, expect, it, vi } from 'vitest';
-import type { EditorHost, HostTool, ToolPointerEvent } from './host';
+import type { EditorHost, HostTool, ResolvedLibrary, ToolPointerEvent } from './host';
 import { OvdEditor } from './OvdEditor';
 import { editor } from './state/store';
-import { openStarter } from './test/starter';
+import { loadStarter, openStarter } from './test/starter';
+
+const SHA = 'abcdef1234567890abcdef1234567890abcdef12';
+const CORE_UI = (ref: string) => ({ name: 'core-ui', url: 'https://example.com/core-ui', ref });
+const lib = loadStarter();
+
+/** The starter with one library in its manifest, opened as a host would open it. */
+function openWithLibrary(ref: string) {
+    const project = loadStarter();
+    project.manifest.libraries = [CORE_UI(ref)];
+    editor().loadProject(project, { kind: 'local', name: 'Starter' });
+}
 
 const openFileMenu = async (user: ReturnType<typeof userEvent.setup>) => {
     await user.click(screen.getByRole('button', { name: 'File menu' }));
@@ -104,31 +116,66 @@ describe('the host interface (#66)', () => {
         expect(save).toHaveBeenCalledTimes(2);
     });
 
-    it('shows library status from the host, and locks the list when not editable', async () => {
+    it('resolves libraries on open, shows status and locks the list when not editable', async () => {
         const user = userEvent.setup();
-        openStarter();
-        act(() =>
-            editor().update((d) => {
-                d.manifest.libraries = [
-                    { name: 'core-ui', url: 'https://example.com/core-ui', ref: 'v1.0.0' },
-                ];
-            }),
+        const resolve = vi.fn(async (libs: ManifestLibrary[]) =>
+            libs.map((l) => ({ name: l.name, ref: l.ref, sha: SHA, error: null, project: lib })),
         );
-        const sha = 'abcdef1234567890abcdef1234567890abcdef12';
-        render(
-            <OvdEditor
-                host={{
-                    libraries: {
-                        status: [{ name: 'core-ui', ref: 'v1.0.0', sha, error: null }],
-                        editable: false,
-                    },
-                }}
-            />,
-        );
+        openWithLibrary('v1.0.0');
+        render(<OvdEditor host={{ libraries: { resolve, editable: false } }} />);
+        await waitFor(() => expect(editor().libraryStatus).toHaveLength(1));
+        expect(resolve).toHaveBeenCalledTimes(1);
+        expect(resolve.mock.calls[0]![0]).toEqual([CORE_UI('v1.0.0')]);
+        expect(editor().project!.libraries).toEqual({ 'core-ui': lib });
+        // Library files are not an edit: no undo step, nothing unsaved.
+        expect(editor().past).toHaveLength(0);
+        expect(editor().project).toBe(editor().savedProject);
+
         await user.click(screen.getByRole('tab', { name: 'Assets' }));
         const section = screen.getByRole('region', { name: 'Libraries' });
         expect(within(section).getByText(/pinned abcdef1/)).toBeInTheDocument();
         expect(within(section).getByLabelText('core-ui version')).toBeDisabled();
         expect(within(section).queryByRole('button', { name: 'Add library' })).toBeNull();
+    });
+
+    it('resolves again when the list changes, not on other edits, and drops a stale answer', async () => {
+        let first!: (v: ResolvedLibrary[]) => void;
+        const resolve = vi
+            .fn<(libs: ManifestLibrary[]) => Promise<ResolvedLibrary[]>>()
+            .mockImplementationOnce(() => new Promise((r) => (first = r)))
+            .mockImplementation(async (libs) =>
+                libs.map((l) => ({ name: l.name, ref: l.ref, sha: SHA, error: null })),
+            );
+        openWithLibrary('v1.0.0');
+        render(<OvdEditor host={{ libraries: { resolve } }} />);
+        expect(resolve).toHaveBeenCalledTimes(1);
+
+        act(() => editor().update((d) => void (d.manifest.name = 'Renamed')));
+        expect(resolve).toHaveBeenCalledTimes(1); // not a library edit
+
+        act(() => editor().update((d) => void (d.manifest.libraries![0]!.ref = 'v2.0.0')));
+        await waitFor(() => expect(editor().libraryStatus[0]?.ref).toBe('v2.0.0'));
+        expect(resolve).toHaveBeenCalledTimes(2);
+
+        // The first call answers late, for v1.0.0: it must not overwrite v2.0.0.
+        await act(async () => first([{ name: 'core-ui', ref: 'v1.0.0', sha: SHA, error: null }]));
+        expect(editor().libraryStatus[0]?.ref).toBe('v2.0.0');
+
+        act(() => editor().undo()); // back to v1.0.0 is a list change too
+        await waitFor(() => expect(editor().libraryStatus[0]?.ref).toBe('v1.0.0'));
+        expect(resolve).toHaveBeenCalledTimes(3);
+    });
+
+    it('shows the resolver error on each library', async () => {
+        openWithLibrary('v1.0.0');
+        const resolve = vi.fn(async () => {
+            throw new Error('Library host unreachable');
+        });
+        render(<OvdEditor host={{ libraries: { resolve } }} />);
+        await waitFor(() =>
+            expect(editor().libraryStatus).toEqual([
+                { name: 'core-ui', ref: 'v1.0.0', sha: null, error: 'Library host unreachable' },
+            ]),
+        );
     });
 });

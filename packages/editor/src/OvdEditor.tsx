@@ -6,6 +6,7 @@ import { Toolbar } from './editor/Toolbar';
 import { TopBar } from './editor/TopBar';
 import { type EditorHost, type HostTool, HostProvider } from './host';
 import { useShortcuts } from './hooks/useShortcuts';
+import { useLibraryResolution } from './lib/libraries';
 import { resetMeasureCache } from './lib/measure';
 import { LeftPanel } from './panels/LeftPanel';
 import { PropertiesPanel } from './panels/PropertiesPanel';
@@ -22,6 +23,7 @@ const NO_TOOLS: HostTool[] = [];
 export function OvdEditor({ host = {} }: { host?: EditorHost }) {
     const project = useEditor((s) => s.project);
     useShortcuts(host.commands, host.tools ?? NO_TOOLS);
+    useLibraryResolution(host.libraries?.resolve);
 
     useEffect(() => {
         // Text measured before web fonts arrived used fallback metrics.
