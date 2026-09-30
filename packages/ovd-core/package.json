@@ -5,7 +5,8 @@
     "private": true,
     "description": "Framework-free reader, writer and tooling for the Open Vector Design (OVD) format.",
     "exports": {
-        ".": "./src/index.ts"
+        ".": "./src/index.ts",
+        "./node": "./src/node.ts"
     },
     "scripts": {
         "lint": "eslint . --max-warnings 0",

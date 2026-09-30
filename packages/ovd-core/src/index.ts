@@ -16,3 +16,5 @@ export * from './layout';
 export * from './export';
 export * from './diff';
 export * from './import-sketch';
+export * from './import-figma';
+export * from './comments';

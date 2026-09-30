@@ -1,6 +1,7 @@
 /** `ovd validate` (spec §10): structural checks a writer must satisfy. */
 import { resolveInstance } from './components';
-import { type Project, type SceneNode, walk } from './model';
+import { readThread } from './comments';
+import { type Project, type SceneNode, findNode, walk } from './model';
 import { collectTokenRefs, componentFileNodes } from './refs';
 import { listThemes, projectTokens } from './tokens';
 
@@ -61,14 +62,18 @@ function checkScene(
             seen.add(n.id);
         }
         if (n.type === 'instance' && !resolveInstance(project, file, n)) {
-            const lib = /^[\w-]+:(?!\/\/)/.test(n.href);
+            const lib = /^([\w-]+):(?!\/\/)/.exec(n.href)?.[1];
+            const loaded = !!lib && !!project.libraries?.[lib];
             issues.push({
-                severity: lib ? 'warning' : 'error',
+                // Not loaded is not wrong: the host may not have fetched it. Loaded and missing is.
+                severity: lib && !loaded ? 'warning' : 'error',
                 file,
                 id: n.id,
-                message: lib
-                    ? `instance refers to library component ${n.href}, which is not loaded`
-                    : `instance refers to ${n.href}, which does not exist`,
+                message: !lib
+                    ? `instance refers to ${n.href}, which does not exist`
+                    : loaded
+                      ? `instance refers to ${n.href}, which is not in library ${lib}`
+                      : `instance refers to library component ${n.href}, which is not loaded`,
             });
         }
         if (n.type === 'image' && n.href.startsWith('data:')) {
@@ -87,6 +92,32 @@ export function validateProject(project: Project): Issue[] {
     const issues: Issue[] = [];
     for (const page of project.pages) {
         checkScene(project, page.file, page.children, new Set(), issues);
+    }
+    // Comments whose element is gone still show, unattached — worth knowing, not an error.
+    for (const [path, raw] of Object.entries(project.comments)) {
+        const thread = readThread(raw);
+        if (!thread) continue;
+        const { file, element } = thread.anchor;
+        const nodes = [
+            ...project.pages.filter((p) => p.file === file).map((p) => p.children),
+            ...project.components.filter((c) => c.file === file).map((c) => componentFileNodes(c)),
+        ];
+        if (!nodes.length) {
+            issues.push({
+                severity: 'warning',
+                file: path,
+                message: `comment is anchored to ${file}, which no longer exists`,
+            });
+            continue;
+        }
+        if (element && !nodes.some((list) => findNode(list as never, element))) {
+            issues.push({
+                severity: 'warning',
+                file: path,
+                id: element,
+                message: `comment is anchored to element ${element}, which no longer exists`,
+            });
+        }
     }
     for (const file of project.components) {
         const seen = new Set<string>();

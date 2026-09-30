@@ -5,12 +5,15 @@
     "scripts": {
         "dev": "turbo dev",
         "dev:editor": "turbo dev --filter=@ovd/editor",
+        "dev:server": "turbo dev --filter=@ovd/server",
         "build": "turbo build",
         "build:editor": "turbo build --filter=@ovd/editor",
+        "build:server": "turbo build --filter=@ovd/server",
         "lint": "turbo lint",
         "typecheck": "turbo typecheck",
         "test": "turbo test",
-        "format": "prettier --write \"**/*.{ts,tsx,mjs,json,css,md}\""
+        "format": "prettier --write \"**/*.{ts,tsx,mjs,json,css,md}\"",
+        "build:schema": "pnpm --filter @workspace/api-client build:schema"
     },
     "devDependencies": {
         "prettier": "^3.6.2",
@@ -18,7 +21,7 @@
     },
     "packageManager": "pnpm@10.4.1",
     "engines": {
-        "node": ">=20"
+        "node": ">=22.13"
     },
     "pnpm": {
         "overrides": {

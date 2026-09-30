@@ -44,13 +44,36 @@ export interface ResolvedComponent {
     variant: ComponentNode;
 }
 
-export function findComponent(
-    project: Project,
-    fromFile: string,
-    href: string,
-): { file: ComponentFile; set: ComponentSet; direct?: ComponentNode } | undefined {
+/** `name:path` — a library-qualified file (spec §5 resolution order, last step). */
+const LIB = /^([\w-]+):(?!\/\/)(.+)$/;
+
+type Found = { file: ComponentFile; set: ComponentSet; direct?: ComponentNode };
+
+/** A library's component file renamed `name:file`, so references made from inside it stay in it. */
+const qualify = (hit: Found, library: string): Found => ({
+    ...hit,
+    file: { ...hit.file, file: `${library}:${hit.file.file}` },
+});
+
+export function findComponent(project: Project, fromFile: string, href: string): Found | undefined {
+    // Inside a library component: resolve in that library.
+    const scoped = LIB.exec(fromFile);
+    if (scoped) {
+        const lib = project.libraries?.[scoped[1]!];
+        const hit = lib && findComponent(lib, scoped[2]!, href);
+        return hit ? qualify(hit, scoped[1]!) : undefined;
+    }
     const parts = parseHref(fromFile, href);
-    if (parts.library) return undefined; // libraries are fetched by a host; not available offline
+    if (parts.library) {
+        // `core-ui:button.svg#c_button` — the path is the library's, with components/ implied.
+        const lib = project.libraries?.[parts.library];
+        if (!lib || !parts.file) return undefined;
+        for (const file of [parts.file, `components/${parts.file}`]) {
+            const hit = findComponent(lib, file, `#${parts.id}`);
+            if (hit) return qualify(hit, parts.library);
+        }
+        return undefined;
+    }
     const target = parts.file ?? fromFile;
     const file = project.components.find((c) => c.file === target);
     if (!file) return undefined;
@@ -60,6 +83,16 @@ export function findComponent(
         if (direct) return { file, set, direct };
     }
     return undefined;
+}
+
+/** An asset referenced from `fromFile` — the project's, or a library's for library components. */
+export function assetOf(project: Project, fromFile: string, href: string): Uint8Array | undefined {
+    const scoped = LIB.exec(fromFile);
+    if (scoped) {
+        const lib = project.libraries?.[scoped[1]!];
+        return lib ? assetOf(lib, scoped[2]!, href) : undefined;
+    }
+    return project.assets[resolveRelative(fromFile, href)];
 }
 
 /** The variant props an instance ends up with: the set default, then the href's own variant,

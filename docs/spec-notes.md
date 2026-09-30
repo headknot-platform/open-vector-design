@@ -96,3 +96,61 @@ renderers (Inkscape, librsvg, image previews on Git hosts). Flattened exports (�
 and are safe everywhere, which is one more reason viewers should read exports.
 *Suggested:* state that viewers must not rely on `var()` in source files, or move fallbacks to
 `style="fill: var(--x, fallback)"`, which has broader support.
+
+## Packages (§3)
+
+**16. A project is a package folder; there is no `.ovd` file.** §3 says that for sharing as a single
+file "the same folder is zipped with the extension `.ovd`", and §12 item 8 lists an "`.ovd` ZIP"
+among the share formats. *Decided:* a project has one shape everywhere — on disk, in Git and over the
+wire — a **package folder**, like an unpacked Chrome extension. A ZIP is a second format with its own
+edge cases (a ZIP of the folder or of its contents, `__MACOSX/`, compression settings changing bytes
+for nothing), and it cannot be diffed or versioned, which is what OVD exists for. The editor's
+`.ovd` open/download was removed (#37, #38).
+*Identified by:* a `manifest.json` at the folder's root. Its `$schema`
+(`https://ovd.dev/schema/0.1/manifest.json`) names the format version; `ovd-core` requires the
+manifest but does not check `$schema` yet, and should once there is a second version.
+*Transfer:* tools move the folder itself — the OVD server stores each package as a folder that is also
+a Git repository (`docs/projects.md`), and a download or upload carries the folder's files with their
+relative paths. The server sends a download as `<name>.tar.gz` with one top folder (#39): it streams,
+it is standard, and macOS, Windows 11 and `tar -xzf` all unpack it — as a folder. The archive is how
+the folder travels, not a project format: nothing reads a project from it without unpacking.
+Imports accept the same two shapes back: the folder's files with their relative paths (a folder
+picker's upload), or that `.tar.gz` (#14).
+*Suggested:* replace the §3 sentence with "An OVD project is a package: a folder with `manifest.json`
+at its root, stored and shared as a folder (usually a Git repository). There is no single-file
+container." — and in §12 item 8, replace "`.ovd` ZIP" with "a download of the package folder".
+
+## Libraries (§3, §5)
+
+**17. Resolving and pinning manifest libraries.** §3 lists `libraries` (`name`, `url`, `ref`) and §5
+resolves `core-ui:button.svg#c_button` last, but neither says what the path is relative to, what
+"pinned" means when a tag moves, or whose tokens a library component uses. *Decided:*
+- The path after `name:` is relative to the library package's root, with `components/` implied when
+  omitted: `core-ui:button.svg` and `core-ui:components/button.svg` name the same file. References
+  made *inside* a library component (nested instances, images) resolve within that library.
+- A ref is pinned on first resolution: the host records the commit a tag (or branch, or short sha)
+  resolved to and keeps using it, so a moved tag cannot silently change a project; changing the
+  `ref` in the manifest is how a project moves to a new version.
+- A library's tokens are not merged into the host project. Library components keep their stored
+  fallback values (every paint has one, §4) unless the host defines the same tokens — which is how
+  a design system is usually shared (the host imports the same token files).
+- Libraries of libraries are not loaded.
+*Suggested:* add to §3: "The path in `name:path#id` is relative to the library's root; `components/`
+may be omitted. A tool resolves `ref` once and records the commit." — and to §8 that library
+components resolve tokens against the host project.
+
+## Comments (§9)
+
+**18. Comment anchors and lifecycle.** §9's example thread has `"point": [80, 24]` but does not say
+what the point is relative to, how a thread is resolved, or what happens to threads when the design
+moves on in Git. *Decided:*
+- `point` is measured from the anchored **element's top-left** (from the file's origin when there is
+  no `element`), so a pin follows its element when it moves. A thread whose element is deleted is
+  kept and listed unattached; `ovd validate` warns about it.
+- Resolving sets `resolved: true` plus `resolvedBy` (an author email) and `resolvedAt` (ISO 8601);
+  reopening removes both. Messages may add a display `name` next to `author`.
+- Threads are committed with the rest of the package, but they are discussion, not design: a tool
+  switching branches, pulling or restoring an older commit keeps the current threads, and comment
+  files never count as uncommitted design changes.
+*Suggested:* in §9, "`point` is [x, y] from the element's top-left" and the `resolvedBy` /
+`resolvedAt` keys.

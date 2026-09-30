@@ -3,7 +3,7 @@
  * tokens replaced by literal values for one theme, images inlined, and no `ovd:` markup left — a
  * self-contained SVG that any viewer renders exactly.
  */
-import { instanceContent } from './components';
+import { assetOf, instanceContent } from './components';
 import {
     type ComponentNode,
     type FrameNode,
@@ -18,6 +18,7 @@ import type { Measure } from './text';
 import { type TokenSet, projectTokens, tokenColor } from './tokens';
 import { type XmlElement, type XmlNode, serializeXml } from './xml';
 import { pageToXml } from './write';
+import { type FileMap, writeProject } from './project';
 
 export interface ExportOptions {
     /** Theme to resolve tokens with (default theme when omitted). */
@@ -115,8 +116,8 @@ function flattenNodes(nodes: SceneNode[], fromFile: string, ctx: Ctx): SceneNode
             ctx.opts.inlineImages !== false &&
             !/^(data:|https?:)/.test(n.href)
         ) {
-            const path = resolveRelative(fromFile, n.href);
-            const bytes = ctx.project.assets[path];
+            const path = resolveRelative(fromFile.replace(/^[\w-]+:(?!\/\/)/, ''), n.href);
+            const bytes = assetOf(ctx.project, fromFile, n.href);
             if (bytes) {
                 const ext = path.split('.').pop()?.toLowerCase() ?? '';
                 n = {
@@ -205,4 +206,10 @@ export function exportAll(project: Project, opts: ExportOptions = {}): Record<st
     for (const page of project.pages)
         out[exportPath(project, page)] = exportPageSvg(project, page, opts);
     return out;
+}
+
+/** Everything a package folder holds after a save: canonical sources plus flattened exports (§5).
+ * The server's save and `ovd export` both write this, so they cannot disagree. */
+export function packageFiles(project: Project, opts: ExportOptions = {}): FileMap {
+    return writeProject(project, { generated: exportAll(project, opts) });
 }
