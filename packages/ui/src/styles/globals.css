@@ -3,6 +3,7 @@
 
 @source "../../../../apps/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
+@source "../../../editor/src/**/*.{ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 

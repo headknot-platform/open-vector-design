@@ -11,12 +11,46 @@ a plain folder of files that diff, review and merge like code.
 | [`OVD-spec-v0.1.md`](OVD-spec-v0.1.md)     | The draft format specification                                                                                            |
 | [`docs/spec-notes.md`](docs/spec-notes.md) | Decisions where the draft is silent or ambiguous                                                                          |
 | [`packages/ovd-core`](packages/ovd-core)   | Format library: read, write, validate, export, diff, Sketch/Figma import — no DOM, no runtime dependencies; the `ovd` CLI |
+| [`packages/editor`](packages/editor)       | The editor as an embeddable React component — it does no I/O; its host plugs in files, a server, accounts                 |
+| [`apps/standalone`](apps/standalone)       | **The OVD Editor**: the editor with local folders, `.tar.gz`, browser autosave and export — no account, no server         |
 | [`packages/ui`](packages/ui)               | UI primitives (shadcn/ui) shared by the editor                                                                            |
 | [`examples/starter`](examples/starter)     | A starter project in canonical form                                                                                       |
 
-**The OVD Editor** — a free, standalone editor you can run anywhere, with no account and no
-server — is being extracted into this repository. It will open and save a project folder on your
-disk, keep an autosave in the browser, and build to static files you can host yourself.
+## The OVD Editor
+
+A free editor you can run anywhere, with no account and no server. It makes no network requests at
+all — your files stay on your computer.
+
+- **Open and save a package folder** in place (Chrome, Edge). Other browsers open a folder as a copy
+  and save by downloading a `.tar.gz`.
+- **Autosave in the browser**: a closed tab or a crash loses nothing; recent folders reopen.
+- **Import** Sketch files; **export** pages as SVG or PNG, tokens as DTCG JSON or CSS variables.
+- **Validate** a project against the spec, and jump to each problem.
+
+```bash
+pnpm install
+pnpm dev:standalone        # http://localhost:5174
+pnpm build:standalone      # static files in apps/standalone/dist — host them anywhere
+```
+
+## Embedding the editor
+
+`packages/editor` is the editor on its own. It renders and edits a project and does no I/O: the
+host decides where projects come from and go to, and can add menu entries, tools, canvas layers and
+panels through `EditorHost` (`packages/editor/src/host.tsx`).
+
+```tsx
+import { OvdEditor, editor, useEditor } from '@workspace/editor';
+
+editor().loadProject(project, { kind: 'local', name: 'My design' }); // a Project from ovd-core
+useEditor.subscribe((s) => s.project !== s.savedProject && save(s.project)); // your storage
+// … once stored: editor().markSaved()
+
+<OvdEditor host={{ fileMenu: { sections: [[{ label: 'Save', onSelect: save }]] } }} />;
+```
+
+`apps/standalone` is a complete host (local files); a host with a server can add sign-in, sharing,
+history and comments the same way.
 
 ## A project is a folder
 
