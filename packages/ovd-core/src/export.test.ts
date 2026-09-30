@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { exportAll, exportPageSvg, toBase64 } from './export';
+import { exportAll, exportPageSvg, packageFiles, toBase64 } from './export';
 import { createImage } from './model';
 import { readProject } from './project';
 import { parseXml } from './xml';
@@ -72,6 +72,18 @@ describe('flattened export (spec §5, §11 level 1)', () => {
             'exports/onboarding.svg',
             'exports/dashboard.svg',
         ]);
+    });
+
+    it('drops exports no page produces any more, and keeps other files it does not know', () => {
+        const p = readProject({ ...files, 'exports/deleted.svg': '<svg/>', 'README.md': '# Hi' });
+        const out = packageFiles(p);
+        expect(out['exports/deleted.svg']).toBeUndefined();
+        expect(out['README.md']).toBe('# Hi');
+        expect(
+            Object.keys(out)
+                .filter((k) => k.startsWith('exports/'))
+                .sort(),
+        ).toEqual(Object.keys(exportAll(p)).sort());
     });
 });
 

@@ -211,5 +211,12 @@ export function exportAll(project: Project, opts: ExportOptions = {}): Record<st
 /** Everything a package folder holds after a save: canonical sources plus flattened exports (§5).
  * The server's save and `ovd export` both write this, so they cannot disagree. */
 export function packageFiles(project: Project, opts: ExportOptions = {}): FileMap {
-    return writeProject(project, { generated: exportAll(project, opts) });
+    const generated = exportAll(project, opts);
+    const folder = project.manifest.exports || 'exports/';
+    const files = writeProject(project, { generated });
+    // The exports folder is generated: what no page produces any more is stale (a deleted or
+    // renamed page), exactly as `ovd export` treats it. `readProject` kept it in `other`.
+    for (const path of Object.keys(files))
+        if (path.startsWith(folder) && !(path in generated)) delete files[path];
+    return files;
 }

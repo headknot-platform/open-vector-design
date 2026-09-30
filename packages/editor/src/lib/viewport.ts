@@ -36,8 +36,11 @@ export function zoomAround(vp: Viewport, zoom: number, screen: Point): Viewport 
 }
 
 export function fitRect(r: Rect, padding = 64, maxZoom = 1): Viewport {
-    const zw = (canvasSize.width - padding * 2) / Math.max(1, r.width);
-    const zh = (canvasSize.height - padding * 2) / Math.max(1, r.height);
+    // On a narrow canvas a fixed padding would leave no room at all (zoom clamped to the minimum).
+    const px = Math.min(padding, canvasSize.width / 8);
+    const py = Math.min(padding, canvasSize.height / 8);
+    const zw = (canvasSize.width - px * 2) / Math.max(1, r.width);
+    const zh = (canvasSize.height - py * 2) / Math.max(1, r.height);
     const zoom = clampZoom(Math.min(zw, zh, maxZoom));
     return {
         zoom,

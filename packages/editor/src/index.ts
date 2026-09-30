@@ -27,4 +27,4 @@ export { type DocRef, docName, docRoots } from './lib/doc';
 export { type Point, type Rect, absRect } from './lib/geometry';
 export { toScreen } from './lib/viewport';
 export { setUiTheme, useUiTheme } from './lib/ui-theme';
-export { resetMeasureCache } from './lib/measure';
+export { canvasMeasure, resetMeasureCache } from './lib/measure';
