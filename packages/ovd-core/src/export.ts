@@ -15,7 +15,7 @@ import {
 } from './model';
 import { basename, joinPath, resolveRelative } from './paths';
 import type { Measure } from './text';
-import { type TokenSet, projectTokens, tokenColor } from './tokens';
+import { type TokenSet, projectTokens, tokenColor, tokensToCss } from './tokens';
 import { type XmlElement, type XmlNode, serializeXml } from './xml';
 import { pageToXml } from './write';
 import { type FileMap, writeProject } from './project';
@@ -211,5 +211,32 @@ export function exportAll(project: Project, opts: ExportOptions = {}): Record<st
 /** Everything a package folder holds after a save: canonical sources plus flattened exports (§5).
  * The server's save and `ovd export` both write this, so they cannot disagree. */
 export function packageFiles(project: Project, opts: ExportOptions = {}): FileMap {
-    return writeProject(project, { generated: exportAll(project, opts) });
+    const generated = exportAll(project, opts);
+    const folder = project.manifest.exports || 'exports/';
+    const files = writeProject(project, { generated });
+    // The exports folder is generated: what no page produces any more is stale (a deleted or
+    // renamed page), exactly as `ovd export` treats it. `readProject` kept it in `other`.
+    for (const path of Object.keys(files))
+        if (path.startsWith(folder) && !(path in generated)) delete files[path];
+    return files;
+}
+
+/** Tokens for a theme, aliases resolved, as nested DTCG (`$type`, `$value`) — what the server's
+ *  `/export/tokens.json` serves and the standalone editor downloads. */
+export function tokensJson(project: Project, theme?: string): Record<string, unknown> {
+    const set = projectTokens(project, theme);
+    const out: Record<string, unknown> = {};
+    for (const [path, token] of set.tokens) {
+        let group = out;
+        const parts = path.split('.');
+        for (const part of parts.slice(0, -1))
+            group = (group[part] ??= {}) as Record<string, unknown>;
+        group[parts[parts.length - 1]!] = { $type: token.type, $value: token.resolved };
+    }
+    return out;
+}
+
+/** Tokens for a theme as CSS custom properties on `:root` — the same `--names` the exports use. */
+export function tokensCss(project: Project, theme?: string): string {
+    return tokensToCss(projectTokens(project, theme)).trimStart();
 }

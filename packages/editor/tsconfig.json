@@ -1,0 +1,10 @@
+{
+    "extends": "@workspace/typescript-config/react-library.json",
+    "compilerOptions": {
+        "types": ["vite/client", "node", "@testing-library/jest-dom"],
+        "paths": {
+            "@workspace/ui/*": ["../ui/src/*"]
+        }
+    },
+    "include": ["src", "vitest.config.ts"]
+}

@@ -5,7 +5,9 @@
     "type": "module",
     "scripts": {
         "dev": "turbo dev",
+        "dev:standalone": "turbo dev --filter=@ovd/standalone",
         "build": "turbo build",
+        "build:standalone": "turbo build --filter=@ovd/standalone",
         "lint": "turbo lint",
         "typecheck": "turbo typecheck",
         "test": "turbo test",
