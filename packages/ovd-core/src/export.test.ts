@@ -1,7 +1,8 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { exportAll, exportPageSvg, packageFiles, toBase64 } from './export';
+import { exportAll, exportPageSvg, packageFiles, toBase64, tokensCss, tokensJson } from './export';
+import { projectTokens } from './tokens';
 import { createImage } from './model';
 import { readProject } from './project';
 import { parseXml } from './xml';
@@ -72,6 +73,20 @@ describe('flattened export (spec §5, §11 level 1)', () => {
             'exports/onboarding.svg',
             'exports/dashboard.svg',
         ]);
+    });
+
+    it('exports tokens as nested DTCG and as CSS variables, per theme', () => {
+        const set = projectTokens(project, 'dark');
+        const [path, token] = [...set.tokens].find(([, t]) => t.type === 'color')!;
+        const doc = tokensJson(project, 'dark');
+        const at = path
+            .split('.')
+            .reduce<unknown>((g, k) => (g as Record<string, unknown>)[k], doc);
+        expect(at).toEqual({ $type: 'color', $value: token.resolved });
+        const css = tokensCss(project, 'dark');
+        expect(css.startsWith(':root {')).toBe(true);
+        expect(css).toContain('--');
+        expect(css).not.toBe(tokensCss(project, 'light'));
     });
 
     it('drops exports no page produces any more, and keeps other files it does not know', () => {

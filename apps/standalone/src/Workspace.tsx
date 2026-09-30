@@ -2,6 +2,7 @@
 import { type EditorHost, OvdEditor, useEditor } from '@workspace/editor';
 import { useEffect, useMemo } from 'react';
 import { startAutosave } from './lib/autosave';
+import { exportPng, exportSvg, exportTokens } from './lib/exports';
 import {
     canOpenFolders,
     closeProject,
@@ -45,6 +46,7 @@ export function Workspace() {
         () => ({
             save: () => void save(),
             open: canOpenFolders ? () => void openFolder() : () => void closeProject(),
+            exportPage: exportSvg,
         }),
         [],
     );
@@ -76,6 +78,13 @@ export function Workspace() {
                         ? [{ label: 'Save to folder…', onSelect: () => void saveAsFolder() }]
                         : []),
                     { label: 'Download .tar.gz', onSelect: downloadArchive },
+                ],
+                [
+                    { label: 'Export page as SVG', shortcut: '⇧⌘E', onSelect: exportSvg },
+                    { label: 'Export page as PNG (1×)', onSelect: () => void exportPng(1) },
+                    { label: 'Export page as PNG (2×)', onSelect: () => void exportPng(2) },
+                    { label: 'Export tokens (JSON)', onSelect: () => exportTokens('json') },
+                    { label: 'Export tokens (CSS)', onSelect: () => exportTokens('css') },
                 ],
                 [{ label: 'Close project', onSelect: () => void closeProject() }],
             ],

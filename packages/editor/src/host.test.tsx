@@ -40,7 +40,7 @@ describe('the host interface (#66)', () => {
             within(menu)
                 .getAllByRole('menuitem')
                 .map((i) => i.textContent),
-        ).toEqual(['Undo⌘Z', 'Redo⇧⌘Z']);
+        ).toEqual(['Validate project…', 'Undo⌘Z', 'Redo⇧⌘Z']);
     });
 
     it('adds host tools to the toolbar and keymap, and hands them the pointer', async () => {
@@ -111,7 +111,7 @@ describe('the host interface (#66)', () => {
             within(menu)
                 .getAllByRole('menuitem')
                 .map((i) => i.textContent),
-        ).toEqual(['Save⌘S', 'Undo⌘Z', 'Redo⇧⌘Z']);
+        ).toEqual(['Save⌘S', 'Validate project…', 'Undo⌘Z', 'Redo⇧⌘Z']);
         await user.click(within(menu).getByRole('menuitem', { name: /Save/ }));
         expect(save).toHaveBeenCalledTimes(2);
     });
