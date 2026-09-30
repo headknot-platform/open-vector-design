@@ -1,19 +1,15 @@
 {
     "name": "open-vector-design",
     "private": true,
+    "license": "Apache-2.0",
     "type": "module",
     "scripts": {
         "dev": "turbo dev",
-        "dev:editor": "turbo dev --filter=@ovd/editor",
-        "dev:server": "turbo dev --filter=@ovd/server",
         "build": "turbo build",
-        "build:editor": "turbo build --filter=@ovd/editor",
-        "build:server": "turbo build --filter=@ovd/server",
         "lint": "turbo lint",
         "typecheck": "turbo typecheck",
         "test": "turbo test",
-        "format": "prettier --write \"**/*.{ts,tsx,mjs,json,css,md}\"",
-        "build:schema": "pnpm --filter @workspace/api-client build:schema"
+        "format": "prettier --write \"**/*.{ts,tsx,mjs,json,css,md}\""
     },
     "devDependencies": {
         "prettier": "^3.6.2",
