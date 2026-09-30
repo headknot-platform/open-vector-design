@@ -96,3 +96,22 @@ renderers (Inkscape, librsvg, image previews on Git hosts). Flattened exports (�
 and are safe everywhere, which is one more reason viewers should read exports.
 *Suggested:* state that viewers must not rely on `var()` in source files, or move fallbacks to
 `style="fill: var(--x, fallback)"`, which has broader support.
+
+## Packages (§3)
+
+**16. A project is a package folder; there is no `.ovd` file.** §3 says that for sharing as a single
+file "the same folder is zipped with the extension `.ovd`", and §12 item 8 lists an "`.ovd` ZIP"
+among the share formats. *Decided:* a project has one shape everywhere — on disk, in Git and over the
+wire — a **package folder**, like an unpacked Chrome extension. A ZIP is a second format with its own
+edge cases (a ZIP of the folder or of its contents, `__MACOSX/`, compression settings changing bytes
+for nothing), and it cannot be diffed or versioned, which is what OVD exists for. The editor's
+`.ovd` open/download was removed (#37, #38).
+*Identified by:* a `manifest.json` at the folder's root. Its `$schema`
+(`https://ovd.dev/schema/0.1/manifest.json`) names the format version; `ovd-core` requires the
+manifest but does not check `$schema` yet, and should once there is a second version.
+*Transfer:* tools move the folder itself — the OVD server stores each package as a folder that is also
+a Git repository (`docs/projects.md`), and a download or upload carries the folder's files with their
+relative paths (the transfer encoding is settled with the export ticket, #39).
+*Suggested:* replace the §3 sentence with "An OVD project is a package: a folder with `manifest.json`
+at its root, stored and shared as a folder (usually a Git repository). There is no single-file
+container." — and in §12 item 8, replace "`.ovd` ZIP" with "a download of the package folder".

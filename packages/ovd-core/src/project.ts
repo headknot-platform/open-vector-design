@@ -1,6 +1,6 @@
 /**
- * A whole project as a map of `path → content`. Folder, `.ovd` ZIP and browser storage all reduce
- * to this map, so they share one reader and one writer.
+ * A whole project as a map of `path → content` — the package folder (spec note 16) in memory. Disk,
+ * Git and the server API all reduce to this map, so they share one reader and one writer.
  */
 import { canonicalJson } from './json';
 import type { Manifest, Project, TokenDocument } from './model';
