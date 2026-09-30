@@ -6,3 +6,11 @@ licensed under the Apache License, Version 2.0 (see LICENSE).
 
 The OVD format specification (OVD-spec-v0.1.md) and the files under
 examples/ are covered by the same license.
+
+Third-party material:
+
+- packages/ui/src/components: based on shadcn/ui (https://github.com/shadcn-ui/ui),
+  MIT License, Copyright (c) 2023 shadcn. See LICENSE-shadcn-ui in that folder.
+- Builds of the OVD Editor (apps/standalone) bundle open-source packages and the
+  Inter typeface (SIL Open Font License 1.1). Every build includes their names,
+  versions and licence texts in third-party-notices.txt next to index.html.
