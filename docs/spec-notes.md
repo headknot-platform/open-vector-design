@@ -138,3 +138,19 @@ resolves `core-ui:button.svg#c_button` last, but neither says what the path is r
 *Suggested:* add to §3: "The path in `name:path#id` is relative to the library's root; `components/`
 may be omitted. A tool resolves `ref` once and records the commit." — and to §8 that library
 components resolve tokens against the host project.
+
+## Comments (§9)
+
+**18. Comment anchors and lifecycle.** §9's example thread has `"point": [80, 24]` but does not say
+what the point is relative to, how a thread is resolved, or what happens to threads when the design
+moves on in Git. *Decided:*
+- `point` is measured from the anchored **element's top-left** (from the file's origin when there is
+  no `element`), so a pin follows its element when it moves. A thread whose element is deleted is
+  kept and listed unattached; `ovd validate` warns about it.
+- Resolving sets `resolved: true` plus `resolvedBy` (an author email) and `resolvedAt` (ISO 8601);
+  reopening removes both. Messages may add a display `name` next to `author`.
+- Threads are committed with the rest of the package, but they are discussion, not design: a tool
+  switching branches, pulling or restoring an older commit keeps the current threads, and comment
+  files never count as uncommitted design changes.
+*Suggested:* in §9, "`point` is [x, y] from the element's top-left" and the `resolvedBy` /
+`resolvedAt` keys.
