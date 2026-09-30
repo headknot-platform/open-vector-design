@@ -61,14 +61,18 @@ function checkScene(
             seen.add(n.id);
         }
         if (n.type === 'instance' && !resolveInstance(project, file, n)) {
-            const lib = /^[\w-]+:(?!\/\/)/.test(n.href);
+            const lib = /^([\w-]+):(?!\/\/)/.exec(n.href)?.[1];
+            const loaded = !!lib && !!project.libraries?.[lib];
             issues.push({
-                severity: lib ? 'warning' : 'error',
+                // Not loaded is not wrong: the host may not have fetched it. Loaded and missing is.
+                severity: lib && !loaded ? 'warning' : 'error',
                 file,
                 id: n.id,
-                message: lib
-                    ? `instance refers to library component ${n.href}, which is not loaded`
-                    : `instance refers to ${n.href}, which does not exist`,
+                message: !lib
+                    ? `instance refers to ${n.href}, which does not exist`
+                    : loaded
+                      ? `instance refers to ${n.href}, which is not in library ${lib}`
+                      : `instance refers to library component ${n.href}, which is not loaded`,
             });
         }
         if (n.type === 'image' && n.href.startsWith('data:')) {

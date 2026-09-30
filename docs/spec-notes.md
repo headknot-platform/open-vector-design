@@ -119,3 +119,22 @@ picker's upload), or that `.tar.gz` (#14).
 *Suggested:* replace the §3 sentence with "An OVD project is a package: a folder with `manifest.json`
 at its root, stored and shared as a folder (usually a Git repository). There is no single-file
 container." — and in §12 item 8, replace "`.ovd` ZIP" with "a download of the package folder".
+
+## Libraries (§3, §5)
+
+**17. Resolving and pinning manifest libraries.** §3 lists `libraries` (`name`, `url`, `ref`) and §5
+resolves `core-ui:button.svg#c_button` last, but neither says what the path is relative to, what
+"pinned" means when a tag moves, or whose tokens a library component uses. *Decided:*
+- The path after `name:` is relative to the library package's root, with `components/` implied when
+  omitted: `core-ui:button.svg` and `core-ui:components/button.svg` name the same file. References
+  made *inside* a library component (nested instances, images) resolve within that library.
+- A ref is pinned on first resolution: the host records the commit a tag (or branch, or short sha)
+  resolved to and keeps using it, so a moved tag cannot silently change a project; changing the
+  `ref` in the manifest is how a project moves to a new version.
+- A library's tokens are not merged into the host project. Library components keep their stored
+  fallback values (every paint has one, §4) unless the host defines the same tokens — which is how
+  a design system is usually shared (the host imports the same token files).
+- Libraries of libraries are not loaded.
+*Suggested:* add to §3: "The path in `name:path#id` is relative to the library's root; `components/`
+may be omitted. A tool resolves `ref` once and records the commit." — and to §8 that library
+components resolve tokens against the host project.
