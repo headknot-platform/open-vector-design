@@ -12,6 +12,7 @@ export type {
     HostTool,
     LibraryStatus,
     MenuItem,
+    ResolvedLibrary,
     ToolPointerEvent,
 } from './host';
 export {

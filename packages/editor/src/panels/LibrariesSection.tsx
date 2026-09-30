@@ -8,14 +8,13 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { ChevronDown, ChevronRight, Library, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { type LibraryStatus, useHost } from '../host';
+import { useHost } from '../host';
 import { editor, useEditor } from '../state/store';
 
 const NAME = /^[\w-]{1,40}$/;
 // A constant, not `?? []`: a selector must return the same value for the same state, or the
 // store re-renders forever (this crashed the Assets tab for projects without libraries).
 const NO_LIBRARIES: ManifestLibrary[] = [];
-const NO_STATUS: LibraryStatus[] = [];
 
 function setLibraries(fn: (libs: { name: string; url: string; ref: string }[]) => void) {
     editor().update((d) => {
@@ -29,7 +28,7 @@ function setLibraries(fn: (libs: { name: string; url: string; ref: string }[]) =
 export function LibrariesSection() {
     const libraries = useEditor((s) => s.project?.manifest.libraries ?? NO_LIBRARIES);
     const { libraries: host } = useHost();
-    const status = host?.status ?? NO_STATUS;
+    const status = useEditor((s) => s.libraryStatus);
     const canEdit = host?.editable ?? true;
     const [open, setOpen] = useState(libraries.length > 0);
     const [draft, setDraft] = useState({ name: '', url: '', ref: '' });

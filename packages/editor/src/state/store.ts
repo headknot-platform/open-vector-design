@@ -17,6 +17,7 @@ import {
 import { type Draft, produce } from 'immer';
 import { create } from 'zustand';
 import { type DocRef, arrangeVariants, docExists, docRoots, findComponentFile } from '../lib/doc';
+import type { LibraryStatus } from '../host';
 import { canvasMeasure } from '../lib/measure';
 
 export type BuiltinTool =
@@ -60,6 +61,8 @@ export interface EditorState {
     future: Project[];
     /** The project as last saved; `project !== savedProject` means unsaved changes. */
     savedProject: Project | null;
+    /** What the host's resolver reported for the manifest's libraries (#67). */
+    libraryStatus: LibraryStatus[];
 }
 
 export interface EditorActions {
@@ -71,6 +74,7 @@ export interface EditorActions {
      * and redo — so they are neither an undo step nor an unsaved change.
      */
     setLibraries(libraries: Record<string, Project>): void;
+    setLibraryStatus(status: LibraryStatus[]): void;
     /** Swaps in a whole project (e.g. a restored version) as one undo step. */
     replaceProject(project: Project): void;
     /** Applies a change to the project, then re-lays out the active document. */
@@ -150,6 +154,7 @@ export const useEditor = create<Store>()((set, get) => ({
     past: [],
     future: [],
     savedProject: null,
+    libraryStatus: [],
 
     loadProject(project, source) {
         const theme = defaultTheme(project.manifest);
@@ -171,11 +176,16 @@ export const useEditor = create<Store>()((set, get) => ({
             past: [],
             future: [],
             savedProject: laid,
+            libraryStatus: [],
         });
     },
 
     markSaved(project) {
         set({ savedProject: project ?? get().project });
+    },
+
+    setLibraryStatus(libraryStatus) {
+        set({ libraryStatus });
     },
 
     setLibraries(libraries) {
